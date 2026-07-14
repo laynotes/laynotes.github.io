@@ -1,94 +1,112 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Layers, Network, Monitor, Download,
+  Layers, Network, Database, Download, Monitor,
   Book, Moon, Sun, ArrowRight, ChevronRight,
   Cpu, Shield, Zap, CheckCircle2, Server, Globe,
-  TerminalSquare, Box, Play
+  TerminalSquare, Box, Play, FileText, AlertTriangle, Info
 } from 'lucide-react';
+import { DOCS } from './docsContent.js';
 
-// --- GitHub 品牌图标 (lucide 已移除，自定义 SVG) ---
-function GitHubIcon({ className = 'w-5 h-5' }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-    </svg>
-  );
-}
-
-// --- 数据配置区 ---
 const PRODUCTS = {
   tunet: {
     id: 'tunet',
     name: 'KunTunet',
-    slogan: '高性能轻量内网穿透，P2P / 中转双模式',
-    accent: '#f97316',       // orange-500
-    accentSoft: '#fff7ed',   // orange-50
-    accentDark: '#431407',   // orange-950/30
-    accentBorder: '#fed7aa', // orange-200
-    accentBorderDark: '#9a3412', // orange-800
+    slogan: '轻量 TCP 内网穿透，中转多路复用 · TLS · Dashboard',
+    accent: '#f97316',
+    accentSoft: '#fff7ed',
+    accentDark: '#431407',
+    accentBorder: '#fed7aa',
+    accentBorderDark: '#9a3412',
     icon: Network,
-    tags: ['Go 开发', '跨平台', 'TCP/UDP', 'HTTP 映射'],
+    tags: ['TCP 穿透', 'TLS 加密', 'Token 认证', '桌面客户端'],
     features: [
-      { title: 'P2P 直连打洞', desc: '基于 STUN/TURN 的智能穿透，NAT 穿透成功率高达 95%以上，极低延迟。' },
-      { title: '多路复用', desc: '单 TCP 连接承载多并发请求，高吞吐量下依然稳定不断流。' },
-      { title: '全协议支持', desc: '原生支持 TCP, UDP, HTTP, HTTPS 等多种协议映射。' },
-      { title: '零配置客户端', desc: '极简的配置文件，支持命令行一行启动，开箱即用。' }
+      { title: 'TCP 中转穿透', desc: '内网 Client 主动连公网 Server，把本地 TCP 服务映射到公网端口，外网即可访问。' },
+      { title: 'TLS + Token', desc: '支持证书加密与 Token 认证（含多 Agent、过期与撤销），适合正式环境部署。' },
+      { title: 'Dashboard 监控', desc: '内置 Web 管理面板，查看在线 Agent、隧道状态与流量统计。' },
+      { title: '断线自愈', desc: '自动重连、心跳检测，Client 常驻后网络抖动可自行恢复。' }
     ],
-    techStack: 'Go + Yaml + QUIC 协议栈',
-    version: 'v1.4.2'
+    intro: 'KunTunet 通过一台公网中转服务器，把内网机器上的 TCP 服务暴露到公网端口。提供服务端、命令行客户端，以及可视化桌面客户端，适合 SSH、数据库、Web 等 TCP 场景。',
+    techStack: 'Server + Client + 桌面 GUI · Windows / macOS / Linux',
+    version: 'v1.3',
+    quickStart: [
+      { comment: '# 1. 公网机器启动服务端' },
+      { cmd: 'KunTunetServer -control 0.0.0.0:7000 -token YOUR_TOKEN -mgmt 127.0.0.1:8001' },
+      { comment: '# 2. 内网机器启动客户端（映射本地 8080 → 公网 9000）' },
+      { cmd: 'KunTunetClient -server PUBLIC_IP:7000 -token YOUR_TOKEN -name web -remote 0.0.0.0:9000 -local 127.0.0.1:8080' },
+      { comment: '# 3. 外网访问映射端口' },
+      { cmd: 'curl http://PUBLIC_IP:9000' },
+      { comment: '# 4. 浏览器打开 Dashboard' },
+      { cmd: '# http://PUBLIC_IP:8001' }
+    ]
   },
   terminal: {
     id: 'terminal',
     name: 'KunTerminal',
-    slogan: '跨平台 SSH 终端管理器，完美替代主流工具',
+    slogan: 'AI Copilot 加持的跨平台 SSH / SFTP 终端',
     accent: '#22c55e',
     accentSoft: '#f0fdf4',
     accentDark: '#052e16',
     accentBorder: '#bbf7d0',
     accentBorderDark: '#166534',
     icon: TerminalSquare,
-    tags: ['多标签', '密钥登录', 'SFTP', '批量运维'],
+    tags: ['AI Copilot', 'Skills 插件', '多模态', 'SSH / SFTP'],
     features: [
-      { title: '多 Tab 标签页', desc: '沉浸式多窗口管理，支持分屏显示，轻松应对多台服务器操作。' },
-      { title: '一键 SFTP', desc: '内置可视化文件管理器，拖拽上传下载，与终端无缝切换。' },
-      { title: '批量脚本执行', desc: '支持编写常用脚本片段，一键下发至多台机器批量执行。' },
-      { title: '云端同步', desc: '支持加密备份配置至 Git 仓库，多设备无缝同步主机列表。' }
+      { title: 'AI Copilot 运维助手', desc: '结合当前终端会话与远程文件上下文，解释报错、生成排查命令、推进 AI Task；支持 OpenAI 兼容 API 与本地 AI CLI。' },
+      { title: 'Skills 与多模态', desc: '内置 Skills 推荐；可附带截图 / 图片提问，让 AI 看日志画面与配置片段再给建议。' },
+      { title: '交互式 SSH 终端', desc: '多 Tab 会话管理，同时操作多台服务器；本地终端与远程会话并列。' },
+      { title: 'SFTP / IDE 一体', desc: '可视化传文件，IDE 改远程配置后立刻在终端验证，可一键把文件发给 AI 分析。' }
     ],
-    techStack: 'Wails + Go + React + xterm.js',
-    version: 'v2.1.0'
+    intro: 'KunTerminal 把 SSH、SFTP、远程 IDE 与 AI Copilot 放在同一桌面端：连上主机后即可边操作边问 AI，适合排障、改配置与批量运维。支持云端 API 与本地 CLI，数据与会话留在本机。',
+    techStack: '桌面客户端 · AI Copilot · Windows / macOS / Linux',
+    version: 'v1.6.0',
+    quickStart: [
+      { comment: '# 1. 安装并打开 KunTerminal，登记主机后「极速连通」' },
+      { cmd: '# 连接管理 → 登记主机 → 极速连通' },
+      { comment: '# 2. 系统设置 → AI 助手：选择 OpenAI 或本地 AI CLI' },
+      { cmd: '# 填写 Base URL / 模型 / API Key，或本地命令' },
+      { comment: '# 3. 终端工具栏打开 AI Copilot，结合会话提问 / 跑 AI Task' },
+      { cmd: '# 可附带图片；也可从 IDE 把文件发给 AI' }
+    ]
   },
-  desk: {
-    id: 'desk',
-    name: 'KunDesk',
-    slogan: 'WebRTC P2P 点对点远程桌面控制工具',
-    accent: '#a855f7',
-    accentSoft: '#faf5ff',
-    accentDark: '#3b0764',
-    accentBorder: '#e9d5ff',
-    accentBorderDark: '#6b21a8',
-    icon: Monitor,
-    tags: ['低延迟', '免公网', '跨平台', '内网联动'],
+  db: {
+    id: 'db',
+    name: 'KunDB',
+    slogan: 'AI Copilot 驱动的多引擎数据库客户端',
+    accent: '#0ea5e9',
+    accentSoft: '#f0f9ff',
+    accentDark: '#0c4a6e',
+    accentBorder: '#bae6fd',
+    accentBorderDark: '#075985',
+    icon: Database,
+    tags: ['AI Copilot', 'Skills / 知识库', '多引擎', '执行计划'],
     features: [
-      { title: '极致低延迟', desc: '基于 WebRTC 实时音视频技术，局域网/同城网络下毫秒级延迟。' },
-      { title: '端到端加密', desc: '控制信令和视频流全链路 DTLS/SRTP 加密，杜绝中间人窃听。' },
-      { title: '自适应画质', desc: '动态码率控制，弱网环境下自动降低分辨率保障流畅度。' },
-      { title: '剪贴板同步', desc: '支持文本、小文件通过数据通道双向快速拷贝。' }
+      { title: 'AI Copilot 写 SQL / 解读', desc: '右侧 Copilot 结合库表上下文生成查询、解释结果与执行计划；支持 @ 引用 Schema 对象。' },
+      { title: 'Skills 插件与知识库', desc: '按场景挂载 Skills，沉淀团队 SQL / 规范到知识库，让 AI 回答更贴合你们的库。' },
+      { title: '多引擎统一工作台', desc: 'PostgreSQL、MySQL、SQLite、SQL Server、MongoDB、Redis、ClickHouse 等一站连接与浏览。' },
+      { title: '查询 · 计划 · 导出', desc: 'Monaco 编辑器运行 / 运行全部 / 执行计划；结果导出 CSV / TSV / JSON / SQL。' }
     ],
-    techStack: 'Rust + WebRTC + React',
-    version: 'v0.9.5-beta'
+    intro: 'KunDB 是带 AI Copilot 的本地多引擎数据库客户端：连上库后即可边查边问，生成 SQL、解读执行计划、基于知识库答疑。凭据加密保存在本机，可选云端 API 或本地 AI CLI。',
+    techStack: '桌面客户端 · AI Copilot · Windows / macOS / Linux',
+    version: 'v1.0.1',
+    quickStart: [
+      { comment: '# 1. 安装 KunDB，新建连接并「测试连接」→「连接」' },
+      { cmd: '# 选择引擎 → 填写地址账号 → 连接' },
+      { comment: '# 2. 设置 → AI 助手：配置 OpenAI 兼容 API 或本地 CLI' },
+      { cmd: '# 可启用 Skills / 知识库' },
+      { comment: '# 3. 展开右侧 AI Copilot，@ 引用表后提问或生成 SQL' },
+      { cmd: '# 也可用工具栏「执行计划」交给 AI 解读' }
+    ]
   }
 };
 
 const SYNERGY_CASES = [
-  { p1: 'tunet', p2: 'terminal', desc: '穿透内网服务器直接无感 SSH 连接' },
-  { p1: 'tunet', p2: 'desk', desc: '外网安全地远程控制内网办公电脑' }
+  { p1: 'tunet', p2: 'terminal', desc: '穿透内网后 SSH / SFTP，并用 AI Copilot 排障' },
+  { p1: 'tunet', p2: 'db', desc: '外网连内网库，AI Copilot 辅助写 SQL / 读计划' }
 ];
 
-/* ============================================
-   主应用
-   ============================================ */
 export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
+  const [docsTab, setDocsTab] = useState('overview');
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -97,8 +115,11 @@ export default function App() {
     }
   }, []);
 
-  const navigate = (page) => {
+  const navigate = (page, opts = {}) => {
     setCurrentPage(page);
+    if (page === 'docs' && opts.docsTab) {
+      setDocsTab(opts.docsTab);
+    }
     window.scrollTo(0, 0);
   };
 
@@ -107,7 +128,6 @@ export default function App() {
       <div style={{ background: 'var(--canvas)', color: 'var(--text)', minHeight: '100vh' }}
            className="font-sans transition-colors duration-300">
 
-        {/* --- Navbar --- */}
         <nav className="sticky top-0 z-50 backdrop-blur-md border-b"
              style={{ background: isDark ? 'rgba(17,24,39,0.85)' : 'rgba(255,255,255,0.78)', borderColor: 'var(--line-soft)' }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -122,15 +142,11 @@ export default function App() {
               </div>
 
               <div className="hidden md:flex space-x-8">
-                {[
-                  { key: 'home', label: '首页' },
-                ].map(item => (
-                  <button key={item.key} onClick={() => navigate(item.key)}
-                    className="text-sm font-medium transition-colors"
-                    style={{ color: currentPage === item.key ? 'var(--primary)' : 'var(--muted-strong)' }}>
-                    {item.label}
-                  </button>
-                ))}
+                <button onClick={() => navigate('home')}
+                  className="text-sm font-medium transition-colors"
+                  style={{ color: currentPage === 'home' ? 'var(--primary)' : 'var(--muted-strong)' }}>
+                  首页
+                </button>
 
                 <div className="relative group">
                   <button className="text-sm font-medium flex items-center gap-1"
@@ -156,13 +172,14 @@ export default function App() {
                   style={{ color: currentPage === 'download' ? 'var(--primary)' : 'var(--muted-strong)' }}>
                   下载中心
                 </button>
-                <button className="text-sm font-medium" style={{ color: 'var(--muted-strong)' }}>文档</button>
+                <button onClick={() => navigate('docs')}
+                  className="text-sm font-medium transition-colors"
+                  style={{ color: currentPage === 'docs' ? 'var(--primary)' : 'var(--muted-strong)' }}>
+                  文档
+                </button>
               </div>
 
               <div className="flex items-center gap-4">
-                <a href="#" style={{ color: 'var(--muted)' }} className="hover:opacity-80 transition-colors">
-                  <GitHubIcon className="w-5 h-5" />
-                </a>
                 <button onClick={() => setIsDark(!isDark)} className="icon-button" title="切换主题">
                   {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                 </button>
@@ -171,14 +188,17 @@ export default function App() {
           </div>
         </nav>
 
-        {/* --- Main --- */}
         <main style={{ minHeight: 'calc(100vh - 64px - 300px)' }}>
           {currentPage === 'home' && <HomePage navigate={navigate} isDark={isDark} />}
-          {['tunet', 'terminal', 'desk'].includes(currentPage) && <ProductPage product={PRODUCTS[currentPage]} navigate={navigate} isDark={isDark} />}
+          {['tunet', 'terminal', 'db'].includes(currentPage) && (
+            <ProductPage product={PRODUCTS[currentPage]} navigate={navigate} isDark={isDark} />
+          )}
           {currentPage === 'download' && <DownloadPage navigate={navigate} isDark={isDark} />}
+          {currentPage === 'docs' && (
+            <DocsPage navigate={navigate} isDark={isDark} activeTab={docsTab} setActiveTab={setDocsTab} />
+          )}
         </main>
 
-        {/* --- Footer --- */}
         <footer className="py-12 mt-20 border-t"
                 style={{ background: 'var(--sidebar)', borderColor: 'var(--line-soft)' }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -207,18 +227,20 @@ export default function App() {
                 <li><button onClick={() => navigate('download')} className="transition-colors" style={{ color: 'var(--muted)' }}
                   onMouseEnter={e => e.currentTarget.style.color = 'var(--primary)'}
                   onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}>统一发版中心</button></li>
-                <li><a href="#" style={{ color: 'var(--muted)' }}>使用文档库</a></li>
-                <li><a href="#" style={{ color: 'var(--muted)' }}>API 参考</a></li>
-                <li><a href="#" style={{ color: 'var(--muted)' }}>常见问题 (FAQ)</a></li>
+                <li><button onClick={() => navigate('docs')} className="transition-colors" style={{ color: 'var(--muted)' }}
+                  onMouseEnter={e => e.currentTarget.style.color = 'var(--primary)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}>使用与部署文档</button></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4" style={{ color: 'var(--text)' }}>关于开源</h4>
+              <h4 className="font-semibold mb-4" style={{ color: 'var(--text)' }}>关于</h4>
               <ul className="space-y-2 text-sm" style={{ color: 'var(--muted)' }}>
-                <li><a href="#" style={{ color: 'var(--muted)' }}>GitHub 仓库</a></li>
-                <li><a href="#" style={{ color: 'var(--muted)' }}>Gitee 镜像</a></li>
-                <li><a href="#" style={{ color: 'var(--muted)' }}>开源协议 (MIT)</a></li>
-                <li><a href="#" style={{ color: 'var(--muted)' }}>更新日志</a></li>
+                <li><button onClick={() => navigate('docs')} className="transition-colors" style={{ color: 'var(--muted)' }}
+                  onMouseEnter={e => e.currentTarget.style.color = 'var(--primary)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}>使用与部署文档</button></li>
+                <li><button onClick={() => navigate('download')} className="transition-colors" style={{ color: 'var(--muted)' }}
+                  onMouseEnter={e => e.currentTarget.style.color = 'var(--primary)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}>版本与下载</button></li>
               </ul>
             </div>
           </div>
@@ -232,13 +254,9 @@ export default function App() {
   );
 }
 
-/* ============================================
-   首页
-   ============================================ */
 function HomePage({ navigate, isDark }) {
   return (
     <div className="animate-slide-up">
-      {/* Hero */}
       <section className="relative overflow-hidden pt-20 pb-24 md:pt-32 md:pb-36 text-center">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 blur-3xl rounded-full pointer-events-none"
              style={{ background: isDark ? 'rgba(49,104,244,0.06)' : 'rgba(6,182,212,0.1)' }}></div>
@@ -247,22 +265,21 @@ function HomePage({ navigate, isDark }) {
             一站式自研 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500">运维工具集</span>
           </h1>
           <p className="text-xl md:text-2xl mb-10 font-light" style={{ color: 'var(--muted)' }}>
-            内网穿透 · 终端管理 · 远程桌面 · 及更多轻量实用小工具
+            内网穿透 · AI 终端 · AI 数据库客户端 · 轻量开箱即用
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button onClick={() => document.getElementById('core-tools')?.scrollIntoView({ behavior: 'smooth' })}
               className="button-primary flex items-center justify-center gap-2 group" style={{ height: '48px', padding: '0 32px', borderRadius: '999px', fontSize: '15px', fontWeight: 500 }}>
               浏览全部工具 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
-            <button onClick={() => navigate('download')}
+            <button onClick={() => navigate('docs')}
               className="button flex items-center justify-center gap-2" style={{ height: '48px', padding: '0 32px', borderRadius: '999px', fontSize: '15px', fontWeight: 500 }}>
-              <Download className="w-4 h-4" /> 前往下载中心
+              <Book className="w-4 h-4" /> 阅读使用文档
             </button>
           </div>
         </div>
       </section>
 
-      {/* Core Tools */}
       <section id="core-tools" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <h2 className="text-3xl font-bold text-center mb-12">核心产品矩阵</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -272,7 +289,6 @@ function HomePage({ navigate, isDark }) {
         </div>
       </section>
 
-      {/* Synergy */}
       <section className="py-20 mt-12 border-y" style={{ background: isDark ? 'rgba(17,24,39,0.4)' : 'rgba(241,245,249,0.5)', borderColor: 'var(--line-soft)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -284,33 +300,35 @@ function HomePage({ navigate, isDark }) {
               const P1 = PRODUCTS[synergy.p1];
               const P2 = PRODUCTS[synergy.p2];
               return (
-                <div key={idx} className="flex items-center justify-between p-6 rounded-card border shadow-panel"
+                <div key={idx} className="flex flex-col gap-3 p-6 rounded-card border shadow-panel"
                      style={{ background: 'var(--surface)', borderColor: 'var(--line-soft)' }}>
-                  <div className="flex items-center gap-3 w-2/5">
-                    <div className="p-2 rounded-btn" style={{ background: P1.accentSoft }}>
-                      <P1.icon className="w-5 h-5" style={{ color: P1.accent }} />
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 w-2/5">
+                      <div className="p-2 rounded-btn" style={{ background: P1.accentSoft }}>
+                        <P1.icon className="w-5 h-5" style={{ color: P1.accent }} />
+                      </div>
+                      <span className="font-semibold text-sm sm:text-base">{P1.name}</span>
                     </div>
-                    <span className="font-semibold text-sm sm:text-base">{P1.name}</span>
-                  </div>
-                  <div className="flex-1 flex justify-center font-bold text-xl" style={{ color: 'var(--line)' }}>+</div>
-                  <div className="flex items-center gap-3 w-2/5 flex-row-reverse text-right">
-                    <div className="p-2 rounded-btn" style={{ background: P2.accentSoft }}>
-                      <P2.icon className="w-5 h-5" style={{ color: P2.accent }} />
+                    <div className="flex-1 flex justify-center font-bold text-xl" style={{ color: 'var(--line)' }}>+</div>
+                    <div className="flex items-center gap-3 w-2/5 flex-row-reverse text-right">
+                      <div className="p-2 rounded-btn" style={{ background: P2.accentSoft }}>
+                        <P2.icon className="w-5 h-5" style={{ color: P2.accent }} />
+                      </div>
+                      <span className="font-semibold text-sm sm:text-base">{P2.name}</span>
                     </div>
-                    <span className="font-semibold text-sm sm:text-base">{P2.name}</span>
                   </div>
+                  <p className="text-sm text-center" style={{ color: 'var(--muted)' }}>{synergy.desc}</p>
                 </div>
               );
             })}
           </div>
           <div className="max-w-4xl mx-auto mt-6 text-center text-sm font-medium py-3 rounded-btn border border-dashed"
                style={{ color: 'var(--muted-strong)', background: 'var(--surface)', borderColor: 'var(--line)' }}>
-            💡 例如：使用 KunTunet 打通网络后，直接使用 KunTerminal 和 KunDesk 进行安全的远程接管。
+            例如：KunTunet 打通网络后，用 KunTerminal / KunDB 远程操作，并借助 AI Copilot 排障与写 SQL。
           </div>
         </div>
       </section>
 
-      {/* Tools Market */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="mb-10">
           <h2 className="text-3xl font-bold mb-2">工具集市</h2>
@@ -331,11 +349,17 @@ function HomePage({ navigate, isDark }) {
   );
 }
 
-/* --- 产品卡片 --- */
 function ProductCard({ product, navigate, isDark }) {
+  const isAI = product.id === 'terminal' || product.id === 'db';
   return (
-    <div className="rounded-card p-6 border transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group flex flex-col"
+    <div className="rounded-card p-6 border transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group flex flex-col relative"
          style={{ background: 'var(--surface)', borderColor: isDark ? product.accentBorderDark : product.accentBorder }}>
+      {isAI && (
+        <span className="absolute top-4 right-4 text-[10px] font-bold px-2 py-0.5 rounded-full border"
+              style={{ color: product.accent, borderColor: product.accent, background: product.accentSoft }}>
+          AI Copilot
+        </span>
+      )}
       <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-6" style={{ background: product.accentSoft }}>
         <product.icon className="w-7 h-7" style={{ color: product.accent }} />
       </div>
@@ -363,16 +387,12 @@ function ProductCard({ product, navigate, isDark }) {
   );
 }
 
-/* ============================================
-   产品详情页
-   ============================================ */
 function ProductPage({ product, navigate, isDark }) {
   if (!product) return null;
   const Icon = product.icon;
 
   return (
     <div className="animate-slide-up">
-      {/* Header */}
       <div className="relative overflow-hidden pt-16 pb-20 border-b" style={{ borderColor: isDark ? product.accentBorderDark : product.accentBorder }}>
         <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ background: product.accentSoft }}></div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
@@ -386,8 +406,11 @@ function ProductPage({ product, navigate, isDark }) {
               {product.version}
             </span>
           </h1>
-          <p className="text-lg md:text-xl max-w-2xl mb-8" style={{ color: 'var(--muted-strong)' }}>
+          <p className="text-lg md:text-xl max-w-2xl mb-4" style={{ color: 'var(--muted-strong)' }}>
             {product.slogan}
+          </p>
+          <p className="text-sm md:text-base max-w-3xl mb-8 leading-relaxed" style={{ color: 'var(--muted)' }}>
+            {product.intro}
           </p>
 
           <div className="flex flex-wrap justify-center gap-3 mb-10">
@@ -399,17 +422,21 @@ function ProductPage({ product, navigate, isDark }) {
             ))}
           </div>
 
-          <button onClick={() => navigate('download')} className="button-primary flex items-center gap-2 hover:-translate-y-0.5 transition-all"
-            style={{ height: '48px', padding: '0 32px', borderRadius: '999px', fontSize: '15px', fontWeight: 500, boxShadow: '0 8px 24px rgba(30,58,138,0.3)' }}>
-            <Download className="w-5 h-5" /> 立即下载 {product.name}
-          </button>
+          <div className="flex flex-wrap justify-center gap-3">
+            <button onClick={() => navigate('download')} className="button-primary flex items-center gap-2 hover:-translate-y-0.5 transition-all"
+              style={{ height: '48px', padding: '0 32px', borderRadius: '999px', fontSize: '15px', fontWeight: 500, boxShadow: '0 8px 24px rgba(30,58,138,0.3)' }}>
+              <Download className="w-5 h-5" /> 立即下载 {product.name}
+            </button>
+            <button onClick={() => navigate('docs', { docsTab: product.id })} className="button flex items-center gap-2"
+              style={{ height: '48px', padding: '0 28px', borderRadius: '999px', fontSize: '15px', fontWeight: 500 }}>
+              <Book className="w-5 h-5" /> 使用文档
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid grid-cols-1 lg:grid-cols-3 gap-16">
         <div className="lg:col-span-2 space-y-16">
-          {/* Features */}
           <section>
             <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
               <Zap className="w-6 h-6" style={{ color: product.accent }} /> 核心特性
@@ -425,7 +452,6 @@ function ProductPage({ product, navigate, isDark }) {
             </div>
           </section>
 
-          {/* Quick Start */}
           <section>
             <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
               <Play className="w-6 h-6" style={{ color: product.accent }} /> 快速上手
@@ -438,56 +464,64 @@ function ProductPage({ product, navigate, isDark }) {
                 <span className="ml-4 text-xs font-mono text-slate-400">bash — {product.name.toLowerCase()}</span>
               </div>
               <div className="p-6 font-mono text-sm text-slate-300 leading-relaxed overflow-x-auto">
-                <div className="text-slate-500"># 1. 下载并解压客户端</div>
-                <div className="mb-4"><span className="text-green-400">$</span> tar -zxvf {product.name.toLowerCase()}-linux-amd64.tar.gz</div>
-                <div className="text-slate-500"># 2. 赋予执行权限</div>
-                <div className="mb-4"><span className="text-green-400">$</span> chmod +x ./{product.name.toLowerCase()}</div>
-                <div className="text-slate-500"># 3. 一键运行</div>
-                <div><span className="text-green-400">$</span> ./{product.name.toLowerCase()} start</div>
-                <div className="mt-2 animate-pulse" style={{ color: product.accent }}>INFO [0000] {product.name} initialized successfully. Ready to connect.</div>
+                {product.quickStart.map((line, i) => (
+                  line.comment ? (
+                    <div key={i} className="text-slate-500 mt-2 first:mt-0">{line.comment}</div>
+                  ) : (
+                    <div key={i} className="mb-2">
+                      {line.cmd.startsWith('#') ? (
+                        <span className="text-slate-500">{line.cmd}</span>
+                      ) : (
+                        <><span className="text-green-400">$</span> {line.cmd}</>
+                      )}
+                    </div>
+                  )
+                ))}
+                <div className="mt-3 animate-pulse" style={{ color: product.accent }}>
+                  INFO [0000] {product.name} ready.
+                </div>
               </div>
             </div>
           </section>
         </div>
 
-        {/* Sidebar */}
         <div className="space-y-8">
-          {[
-            { icon: Cpu, title: '技术架构', content: product.techStack, mono: true },
-            { icon: Shield, title: '开源协议', content: null, mono: false },
-          ].map((card, i) => (
-            <div key={i} className="p-6 rounded-card border" style={{ background: isDark ? 'var(--surface)' : '#f8fafc', borderColor: 'var(--line-soft)' }}>
-              <h3 className="font-bold mb-4 flex items-center gap-2">
-                <card.icon className="w-5 h-5" style={{ color: 'var(--muted)' }} /> {card.title}
-              </h3>
-              {card.mono ? (
-                <p className="text-sm font-mono p-3 rounded-input border" style={{ background: 'var(--surface)', borderColor: 'var(--line-soft)', color: 'var(--muted-strong)' }}>
-                  {card.content}
-                </p>
-              ) : (
-                <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                  本项目采用 <strong style={{ color: 'var(--text)' }}>MIT License</strong>，允许商用、修改及分发。
-                </p>
-              )}
-            </div>
-          ))}
+          <div className="p-6 rounded-card border" style={{ background: isDark ? 'var(--surface)' : '#f8fafc', borderColor: 'var(--line-soft)' }}>
+            <h3 className="font-bold mb-4 flex items-center gap-2">
+              <Cpu className="w-5 h-5" style={{ color: 'var(--muted)' }} /> 运行形态
+            </h3>
+            <p className="text-sm font-mono p-3 rounded-input border" style={{ background: 'var(--surface)', borderColor: 'var(--line-soft)', color: 'var(--muted-strong)' }}>
+              {product.techStack}
+            </p>
+          </div>
+
+          <div className="p-6 rounded-card border" style={{ background: isDark ? 'var(--surface)' : '#f8fafc', borderColor: 'var(--line-soft)' }}>
+            <h3 className="font-bold mb-4 flex items-center gap-2">
+              <Shield className="w-5 h-5" style={{ color: 'var(--muted)' }} /> 数据与隐私
+            </h3>
+            <p className="text-sm" style={{ color: 'var(--muted)' }}>
+              连接配置与凭据保存在本机，不经过第三方云端。正式环境请配合 TLS / 只读账号等安全实践。
+            </p>
+          </div>
 
           <div className="p-6 rounded-card border" style={{ background: isDark ? 'var(--surface)' : '#f8fafc', borderColor: 'var(--line-soft)' }}>
             <h3 className="font-bold mb-4">相关资源</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="#" className="flex items-center gap-2 transition-colors" style={{ color: 'var(--muted-strong)' }}
+                <button onClick={() => navigate('docs', { docsTab: product.id })}
+                   className="flex items-center gap-2 transition-colors" style={{ color: 'var(--muted-strong)' }}
                    onMouseEnter={e => e.currentTarget.style.color = product.accent}
                    onMouseLeave={e => e.currentTarget.style.color = 'var(--muted-strong)'}>
-                  <Book className="w-4 h-4" /> 官方完整文档
-                </a>
+                  <Book className="w-4 h-4" /> 使用与部署文档
+                </button>
               </li>
               <li>
-                <a href="#" className="flex items-center gap-2 transition-colors" style={{ color: 'var(--muted-strong)' }}
+                <button onClick={() => navigate('download')}
+                   className="flex items-center gap-2 transition-colors" style={{ color: 'var(--muted-strong)' }}
                    onMouseEnter={e => e.currentTarget.style.color = product.accent}
                    onMouseLeave={e => e.currentTarget.style.color = 'var(--muted-strong)'}>
-                  <GitHubIcon className="w-4 h-4" /> GitHub 源码库
-                </a>
+                  <Download className="w-4 h-4" /> 前往下载中心
+                </button>
               </li>
             </ul>
           </div>
@@ -497,26 +531,209 @@ function ProductPage({ product, navigate, isDark }) {
   );
 }
 
-/* ============================================
-   下载中心
-   ============================================ */
+function DocBlock({ block, accent, navigate, setActiveTab, isDark }) {
+  if (block.type === 'p') {
+    return <p className="text-sm leading-relaxed" style={{ color: 'var(--muted-strong)' }}>{block.text}</p>;
+  }
+  if (block.type === 'ol') {
+    return (
+      <ol className="space-y-2.5 list-decimal pl-5 text-sm leading-relaxed" style={{ color: 'var(--muted-strong)' }}>
+        {block.items.map((item, i) => <li key={i}>{item}</li>)}
+      </ol>
+    );
+  }
+  if (block.type === 'ul') {
+    return (
+      <ul className="space-y-2 list-disc pl-5 text-sm leading-relaxed" style={{ color: 'var(--muted-strong)' }}>
+        {block.items.map((item, i) => <li key={i}>{item}</li>)}
+      </ul>
+    );
+  }
+  if (block.type === 'code') {
+    return (
+      <div className="rounded-card overflow-hidden border" style={{ background: '#0f172a', borderColor: '#334155' }}>
+        {block.label && (
+          <div className="px-3 py-2 text-xs border-b font-medium" style={{ background: '#1e293b', borderColor: '#334155', color: '#94a3b8' }}>
+            {block.label}
+          </div>
+        )}
+        <pre className="p-4 text-xs sm:text-sm font-mono text-slate-300 overflow-x-auto leading-relaxed whitespace-pre-wrap">
+          {block.lines.join('\n')}
+        </pre>
+      </div>
+    );
+  }
+  if (block.type === 'tip' || block.type === 'warn') {
+    const warn = block.type === 'warn';
+    return (
+      <div className="flex gap-3 p-4 rounded-card border text-sm leading-relaxed"
+           style={{
+             background: warn ? (isDark ? 'rgba(239,68,68,0.08)' : '#fef2f2') : (isDark ? 'rgba(49,104,244,0.1)' : '#eff6ff'),
+             borderColor: warn ? '#fca5a5' : '#93c5fd',
+             color: 'var(--muted-strong)'
+           }}>
+        {warn
+          ? <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#ef4444' }} />
+          : <Info className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#3b82f6' }} />}
+        <span>{block.text}</span>
+      </div>
+    );
+  }
+  if (block.type === 'kv') {
+    return (
+      <div className="rounded-card border overflow-hidden" style={{ borderColor: 'var(--line-soft)' }}>
+        <table className="w-full text-sm">
+          <tbody>
+            {block.rows.map((row, i) => (
+              <tr key={i} style={{ background: i % 2 ? (isDark ? 'rgba(255,255,255,0.02)' : '#f8fafc') : 'transparent' }}>
+                <td className="px-4 py-2.5 font-mono font-medium whitespace-nowrap align-top" style={{ color: accent, width: '36%' }}>{row[0]}</td>
+                <td className="px-4 py-2.5" style={{ color: 'var(--muted-strong)' }}>{row[1]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+  if (block.type === 'cards') {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {block.items.map(item => {
+          const p = PRODUCTS[item.id];
+          const Icon = p?.icon || FileText;
+          return (
+            <button key={item.id} onClick={() => setActiveTab(item.id)}
+              className="text-left p-4 rounded-card border transition-all hover:-translate-y-0.5"
+              style={{ background: 'var(--surface)', borderColor: 'var(--line-soft)' }}
+              onMouseEnter={e => { if (p) e.currentTarget.style.borderColor = p.accent; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--line-soft)'; }}>
+              <div className="flex items-center gap-2 mb-2">
+                <Icon className="w-4 h-4" style={{ color: p?.accent || 'var(--primary)' }} />
+                <span className="font-bold text-sm">{item.name}</span>
+              </div>
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--muted)' }}>{item.desc}</p>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+  return null;
+}
+
+function DocsPage({ navigate, isDark, activeTab, setActiveTab }) {
+  const tabs = [
+    { id: 'overview', label: '文档首页', icon: FileText },
+    ...Object.values(PRODUCTS).map(p => ({ id: p.id, label: p.name, icon: p.icon, accent: p.accent }))
+  ];
+  const doc = DOCS[activeTab] || DOCS.overview;
+  const accent = PRODUCTS[activeTab]?.accent || 'var(--primary)';
+
+  const scrollTo = (id) => {
+    document.getElementById(`doc-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  return (
+    <div className="animate-slide-up max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold mb-2">使用与部署文档</h1>
+        <p className="text-sm md:text-base" style={{ color: 'var(--muted)' }}>
+          按产品查看安装、部署与日常操作步骤（真实界面文案）。
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-8">
+        {tabs.map(tab => {
+          const active = activeTab === tab.id;
+          const Icon = tab.icon;
+          return (
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+              className="px-4 py-2 rounded-full text-sm font-semibold transition-all flex items-center gap-2 border"
+              style={{
+                background: active ? 'var(--primary)' : 'var(--surface)',
+                borderColor: active ? 'var(--primary)' : 'var(--line)',
+                color: active ? '#ffffff' : 'var(--muted-strong)',
+                boxShadow: active ? '0 4px 14px rgba(30,58,138,0.25)' : 'none'
+              }}>
+              <Icon className="w-4 h-4" style={active || !tab.accent ? undefined : { color: tab.accent }} /> {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-8 items-start">
+        <aside className="hidden lg:block sticky top-24">
+          <div className="rounded-card border p-4" style={{ background: 'var(--surface)', borderColor: 'var(--line-soft)' }}>
+            <div className="text-xs font-bold mb-3 uppercase tracking-wide" style={{ color: 'var(--muted)' }}>本页目录</div>
+            <nav className="space-y-1">
+              {doc.sections.map(sec => (
+                <button key={sec.id} onClick={() => scrollTo(sec.id)}
+                  className="w-full text-left text-sm px-2 py-1.5 rounded-btn transition-colors"
+                  style={{ color: 'var(--muted-strong)' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'var(--primary-soft)'; e.currentTarget.style.color = 'var(--primary)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--muted-strong)'; }}>
+                  {sec.heading}
+                </button>
+              ))}
+            </nav>
+          </div>
+        </aside>
+
+        <article className="rounded-card border shadow-panel overflow-hidden min-w-0" style={{ background: 'var(--surface)', borderColor: 'var(--line-soft)' }}>
+          <header className="px-6 py-5 border-b" style={{ borderColor: 'var(--line-soft)', borderLeft: `4px solid ${accent}` }}>
+            <h2 className="text-2xl font-bold mb-1">{doc.title}</h2>
+            {doc.subtitle && (
+              <p className="text-sm" style={{ color: 'var(--muted)' }}>{doc.subtitle}</p>
+            )}
+          </header>
+
+          <div className="p-6 md:p-8 space-y-12">
+            {doc.sections.map(sec => (
+              <section key={sec.id} id={`doc-${sec.id}`} className="scroll-mt-28">
+                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: accent }} />
+                  {sec.heading}
+                </h3>
+                <div className="space-y-4 pl-0 sm:pl-3">
+                  {sec.blocks.map((block, i) => (
+                    <DocBlock key={i} block={block} accent={accent} navigate={navigate} setActiveTab={setActiveTab} isDark={isDark} />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+
+          {PRODUCTS[activeTab] && (
+            <div className="px-6 py-4 border-t flex flex-wrap gap-3" style={{ borderColor: 'var(--line-soft)', background: isDark ? 'rgba(255,255,255,0.02)' : '#f8fafc' }}>
+              <button onClick={() => navigate(activeTab)} className="button-primary text-sm px-4 py-2">
+                查看产品介绍
+              </button>
+              <button onClick={() => navigate('download')} className="button text-sm px-4 py-2">
+                <Download className="w-4 h-4" /> 前往下载
+              </button>
+            </div>
+          )}
+        </article>
+      </div>
+    </div>
+  );
+}
+
 function DownloadPage({ navigate, isDark }) {
   const [activeTab, setActiveTab] = useState('tunet');
 
   const downloads = {
     Windows: [
-      { arch: 'x86_64 (64-bit)', type: '安装包 (.exe)', size: '15.2 MB' },
-      { arch: 'x86_64 (64-bit)', type: '绿色便携版 (.zip)', size: '12.8 MB' },
-      { arch: 'arm64', type: '绿色便携版 (.zip)', size: '12.5 MB' }
+      { arch: 'x86_64 (64-bit)', type: '安装包 (.exe)', size: '—' },
+      { arch: 'x86_64 (64-bit)', type: '绿色便携版 (.zip)', size: '—' }
     ],
     macOS: [
-      { arch: 'Apple Silicon (M1/M2/M3)', type: '磁盘映像 (.dmg)', size: '16.5 MB' },
-      { arch: 'Intel (x86_64)', type: '磁盘映像 (.dmg)', size: '17.1 MB' }
+      { arch: 'Apple Silicon (arm64)', type: '磁盘映像 (.dmg)', size: '—' },
+      { arch: 'Intel (x86_64)', type: '磁盘映像 (.dmg)', size: '—' }
     ],
     Linux: [
-      { arch: 'x86_64 (amd64)', type: '压缩包 (.tar.gz)', size: '14.0 MB' },
-      { arch: 'arm64', type: '压缩包 (.tar.gz)', size: '13.5 MB' },
-      { arch: 'deb', type: 'Debian/Ubuntu (.deb)', size: '14.2 MB' }
+      { arch: 'x86_64 (amd64)', type: '压缩包 (.tar.gz)', size: '—' },
+      { arch: 'arm64', type: '压缩包 (.tar.gz)', size: '—' }
     ]
   };
 
@@ -531,7 +748,6 @@ function DownloadPage({ navigate, isDark }) {
         <p style={{ color: 'var(--muted)' }}>选择所需工具及对应系统架构进行下载。</p>
       </div>
 
-      {/* Tabs */}
       <div className="flex flex-wrap justify-center gap-2 mb-10">
         {Object.values(PRODUCTS).map(p => {
           const active = activeTab === p.id;
@@ -551,7 +767,6 @@ function DownloadPage({ navigate, isDark }) {
         })}
       </div>
 
-      {/* Board */}
       <div className="rounded-card border shadow-panel overflow-hidden" style={{ background: 'var(--surface)', borderColor: 'var(--line-soft)' }}>
         <div className="p-6 border-b flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
              style={{ borderColor: 'var(--line-soft)', background: activeProduct.accentSoft }}>
@@ -563,9 +778,11 @@ function DownloadPage({ navigate, isDark }) {
                 Latest {activeProduct.version}
               </span>
             </h2>
-            <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>更新时间: 2024-05-20 | 包含最新安全补丁及性能优化。</p>
+            <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>{activeProduct.slogan}</p>
           </div>
-          <button className="text-sm font-medium hover:underline" style={{ color: activeProduct.accent }}>查看更新日志 →</button>
+          <button onClick={() => navigate('docs', { docsTab: activeTab })} className="text-sm font-medium hover:underline" style={{ color: activeProduct.accent }}>
+            查看使用文档 →
+          </button>
         </div>
 
         <div className="p-6">
@@ -584,8 +801,8 @@ function DownloadPage({ navigate, isDark }) {
                          onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--line-soft)'}>
                       <span className="font-semibold">{file.arch}</span>
                       <span className="text-xs mt-1 mb-4" style={{ color: 'var(--muted)' }}>{file.type} • {file.size}</span>
-                      <button className="button-primary mt-auto w-full py-2 flex items-center justify-center gap-2">
-                        <Download className="w-4 h-4" /> 点击下载
+                      <button className="button-primary mt-auto w-full py-2 flex items-center justify-center gap-2" disabled title="下载通道即将开放">
+                        <Download className="w-4 h-4" /> 即将开放
                       </button>
                     </div>
                   ))}
@@ -597,7 +814,7 @@ function DownloadPage({ navigate, isDark }) {
       </div>
 
       <div className="mt-8 text-center text-sm" style={{ color: 'var(--muted)' }}>
-        需要源码编译？请前往 <a href="#" className="hover:underline" style={{ color: 'var(--primary)' }}>GitHub Releases</a> 下载 Source code (zip/tar.gz)。
+        下载安装后，请参阅 <button onClick={() => navigate('docs')} className="hover:underline" style={{ color: 'var(--primary)' }}>使用与部署文档</button> 完成配置。
       </div>
     </div>
   );
