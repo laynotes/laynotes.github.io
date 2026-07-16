@@ -3,9 +3,9 @@ import {
   Layers, Network, Database, Download, Monitor,
   Book, Moon, Sun, ArrowRight, ChevronRight,
   Cpu, Shield, Zap, CheckCircle2, Server, Globe,
-  TerminalSquare, Box, Play, FileText, AlertTriangle, Info
+  TerminalSquare, Box, Play, FileText
 } from 'lucide-react';
-import { DOCS } from './docsContent.js';
+import MarkdownDoc, { getDocToc } from './MarkdownDoc.jsx';
 
 const PRODUCTS = {
   tunet: {
@@ -68,9 +68,9 @@ const PRODUCTS = {
       { cmd: '# 可附带图片；也可从 IDE 把文件发给 AI' }
     ]
   },
-  db: {
-    id: 'db',
-    name: 'KunDB',
+  sql: {
+    id: 'sql',
+    name: 'KunSQL',
     slogan: 'AI Copilot 驱动的多引擎数据库客户端',
     accent: '#0ea5e9',
     accentSoft: '#f0f9ff',
@@ -85,11 +85,11 @@ const PRODUCTS = {
       { title: '多引擎统一工作台', desc: 'PostgreSQL、MySQL、SQLite、SQL Server、MongoDB、Redis、ClickHouse 等一站连接与浏览。' },
       { title: '查询 · 计划 · 导出', desc: 'Monaco 编辑器运行 / 运行全部 / 执行计划；结果导出 CSV / TSV / JSON / SQL。' }
     ],
-    intro: 'KunDB 是带 AI Copilot 的本地多引擎数据库客户端：连上库后即可边查边问，生成 SQL、解读执行计划、基于知识库答疑。凭据加密保存在本机，可选云端 API 或本地 AI CLI。',
+    intro: 'KunSQL 是带 AI Copilot 的本地多引擎数据库客户端：连上库后即可边查边问，生成 SQL、解读执行计划、基于知识库答疑。凭据加密保存在本机，可选云端 API 或本地 AI CLI。',
     techStack: '桌面客户端 · AI Copilot · Windows / macOS / Linux',
     version: 'v1.0.1',
     quickStart: [
-      { comment: '# 1. 安装 KunDB，新建连接并「测试连接」→「连接」' },
+      { comment: '# 1. 安装 KunSQL，新建连接并「测试连接」→「连接」' },
       { cmd: '# 选择引擎 → 填写地址账号 → 连接' },
       { comment: '# 2. 设置 → AI 助手：配置 OpenAI 兼容 API 或本地 CLI' },
       { cmd: '# 可启用 Skills / 知识库' },
@@ -101,7 +101,7 @@ const PRODUCTS = {
 
 const SYNERGY_CASES = [
   { p1: 'tunet', p2: 'terminal', desc: '穿透内网后 SSH / SFTP，并用 AI Copilot 排障' },
-  { p1: 'tunet', p2: 'db', desc: '外网连内网库，AI Copilot 辅助写 SQL / 读计划' }
+  { p1: 'tunet', p2: 'sql', desc: '外网连内网库，AI Copilot 辅助写 SQL / 读计划' }
 ];
 
 export default function App() {
@@ -190,7 +190,7 @@ export default function App() {
 
         <main style={{ minHeight: 'calc(100vh - 64px - 300px)' }}>
           {currentPage === 'home' && <HomePage navigate={navigate} isDark={isDark} />}
-          {['tunet', 'terminal', 'db'].includes(currentPage) && (
+          {['tunet', 'terminal', 'sql'].includes(currentPage) && (
             <ProductPage product={PRODUCTS[currentPage]} navigate={navigate} isDark={isDark} />
           )}
           {currentPage === 'download' && <DownloadPage navigate={navigate} isDark={isDark} />}
@@ -269,11 +269,11 @@ function HomePage({ navigate, isDark }) {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button onClick={() => document.getElementById('core-tools')?.scrollIntoView({ behavior: 'smooth' })}
-              className="button-primary flex items-center justify-center gap-2 group" style={{ height: '48px', padding: '0 32px', borderRadius: '999px', fontSize: '15px', fontWeight: 500 }}>
+              className="button button-primary button-lg group">
               浏览全部工具 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
             <button onClick={() => navigate('docs')}
-              className="button flex items-center justify-center gap-2" style={{ height: '48px', padding: '0 32px', borderRadius: '999px', fontSize: '15px', fontWeight: 500 }}>
+              className="button button-lg">
               <Book className="w-4 h-4" /> 阅读使用文档
             </button>
           </div>
@@ -324,7 +324,7 @@ function HomePage({ navigate, isDark }) {
           </div>
           <div className="max-w-4xl mx-auto mt-6 text-center text-sm font-medium py-3 rounded-btn border border-dashed"
                style={{ color: 'var(--muted-strong)', background: 'var(--surface)', borderColor: 'var(--line)' }}>
-            例如：KunTunet 打通网络后，用 KunTerminal / KunDB 远程操作，并借助 AI Copilot 排障与写 SQL。
+            例如：KunTunet 打通网络后，用 KunTerminal / KunSQL 远程操作，并借助 AI Copilot 排障与写 SQL。
           </div>
         </div>
       </section>
@@ -350,7 +350,7 @@ function HomePage({ navigate, isDark }) {
 }
 
 function ProductCard({ product, navigate, isDark }) {
-  const isAI = product.id === 'terminal' || product.id === 'db';
+  const isAI = product.id === 'terminal' || product.id === 'sql';
   return (
     <div className="rounded-card p-6 border transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group flex flex-col relative"
          style={{ background: 'var(--surface)', borderColor: isDark ? product.accentBorderDark : product.accentBorder }}>
@@ -423,12 +423,11 @@ function ProductPage({ product, navigate, isDark }) {
           </div>
 
           <div className="flex flex-wrap justify-center gap-3">
-            <button onClick={() => navigate('download')} className="button-primary flex items-center gap-2 hover:-translate-y-0.5 transition-all"
-              style={{ height: '48px', padding: '0 32px', borderRadius: '999px', fontSize: '15px', fontWeight: 500, boxShadow: '0 8px 24px rgba(30,58,138,0.3)' }}>
+            <button onClick={() => navigate('download')} className="button button-primary button-lg hover:-translate-y-0.5 transition-all"
+              style={{ boxShadow: '0 8px 24px rgba(30,58,138,0.3)' }}>
               <Download className="w-5 h-5" /> 立即下载 {product.name}
             </button>
-            <button onClick={() => navigate('docs', { docsTab: product.id })} className="button flex items-center gap-2"
-              style={{ height: '48px', padding: '0 28px', borderRadius: '999px', fontSize: '15px', fontWeight: 500 }}>
+            <button onClick={() => navigate('docs', { docsTab: product.id })} className="button button-lg">
               <Book className="w-5 h-5" /> 使用文档
             </button>
           </div>
@@ -531,106 +530,16 @@ function ProductPage({ product, navigate, isDark }) {
   );
 }
 
-function DocBlock({ block, accent, navigate, setActiveTab, isDark }) {
-  if (block.type === 'p') {
-    return <p className="text-sm leading-relaxed" style={{ color: 'var(--muted-strong)' }}>{block.text}</p>;
-  }
-  if (block.type === 'ol') {
-    return (
-      <ol className="space-y-2.5 list-decimal pl-5 text-sm leading-relaxed" style={{ color: 'var(--muted-strong)' }}>
-        {block.items.map((item, i) => <li key={i}>{item}</li>)}
-      </ol>
-    );
-  }
-  if (block.type === 'ul') {
-    return (
-      <ul className="space-y-2 list-disc pl-5 text-sm leading-relaxed" style={{ color: 'var(--muted-strong)' }}>
-        {block.items.map((item, i) => <li key={i}>{item}</li>)}
-      </ul>
-    );
-  }
-  if (block.type === 'code') {
-    return (
-      <div className="rounded-card overflow-hidden border" style={{ background: '#0f172a', borderColor: '#334155' }}>
-        {block.label && (
-          <div className="px-3 py-2 text-xs border-b font-medium" style={{ background: '#1e293b', borderColor: '#334155', color: '#94a3b8' }}>
-            {block.label}
-          </div>
-        )}
-        <pre className="p-4 text-xs sm:text-sm font-mono text-slate-300 overflow-x-auto leading-relaxed whitespace-pre-wrap">
-          {block.lines.join('\n')}
-        </pre>
-      </div>
-    );
-  }
-  if (block.type === 'tip' || block.type === 'warn') {
-    const warn = block.type === 'warn';
-    return (
-      <div className="flex gap-3 p-4 rounded-card border text-sm leading-relaxed"
-           style={{
-             background: warn ? (isDark ? 'rgba(239,68,68,0.08)' : '#fef2f2') : (isDark ? 'rgba(49,104,244,0.1)' : '#eff6ff'),
-             borderColor: warn ? '#fca5a5' : '#93c5fd',
-             color: 'var(--muted-strong)'
-           }}>
-        {warn
-          ? <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#ef4444' }} />
-          : <Info className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#3b82f6' }} />}
-        <span>{block.text}</span>
-      </div>
-    );
-  }
-  if (block.type === 'kv') {
-    return (
-      <div className="rounded-card border overflow-hidden" style={{ borderColor: 'var(--line-soft)' }}>
-        <table className="w-full text-sm">
-          <tbody>
-            {block.rows.map((row, i) => (
-              <tr key={i} style={{ background: i % 2 ? (isDark ? 'rgba(255,255,255,0.02)' : '#f8fafc') : 'transparent' }}>
-                <td className="px-4 py-2.5 font-mono font-medium whitespace-nowrap align-top" style={{ color: accent, width: '36%' }}>{row[0]}</td>
-                <td className="px-4 py-2.5" style={{ color: 'var(--muted-strong)' }}>{row[1]}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-  if (block.type === 'cards') {
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {block.items.map(item => {
-          const p = PRODUCTS[item.id];
-          const Icon = p?.icon || FileText;
-          return (
-            <button key={item.id} onClick={() => setActiveTab(item.id)}
-              className="text-left p-4 rounded-card border transition-all hover:-translate-y-0.5"
-              style={{ background: 'var(--surface)', borderColor: 'var(--line-soft)' }}
-              onMouseEnter={e => { if (p) e.currentTarget.style.borderColor = p.accent; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--line-soft)'; }}>
-              <div className="flex items-center gap-2 mb-2">
-                <Icon className="w-4 h-4" style={{ color: p?.accent || 'var(--primary)' }} />
-                <span className="font-bold text-sm">{item.name}</span>
-              </div>
-              <p className="text-xs leading-relaxed" style={{ color: 'var(--muted)' }}>{item.desc}</p>
-            </button>
-          );
-        })}
-      </div>
-    );
-  }
-  return null;
-}
-
 function DocsPage({ navigate, isDark, activeTab, setActiveTab }) {
   const tabs = [
     { id: 'overview', label: '文档首页', icon: FileText },
     ...Object.values(PRODUCTS).map(p => ({ id: p.id, label: p.name, icon: p.icon, accent: p.accent }))
   ];
-  const doc = DOCS[activeTab] || DOCS.overview;
   const accent = PRODUCTS[activeTab]?.accent || 'var(--primary)';
+  const toc = getDocToc(activeTab);
 
   const scrollTo = (id) => {
-    document.getElementById(`doc-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
@@ -638,7 +547,7 @@ function DocsPage({ navigate, isDark, activeTab, setActiveTab }) {
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-2">使用与部署文档</h1>
         <p className="text-sm md:text-base" style={{ color: 'var(--muted)' }}>
-          按产品查看安装、部署与日常操作步骤（真实界面文案）。
+          Markdown 源文件维护，按产品查看完整安装、部署与操作说明。
         </p>
       </div>
 
@@ -665,14 +574,14 @@ function DocsPage({ navigate, isDark, activeTab, setActiveTab }) {
         <aside className="hidden lg:block sticky top-24">
           <div className="rounded-card border p-4" style={{ background: 'var(--surface)', borderColor: 'var(--line-soft)' }}>
             <div className="text-xs font-bold mb-3 uppercase tracking-wide" style={{ color: 'var(--muted)' }}>本页目录</div>
-            <nav className="space-y-1">
-              {doc.sections.map(sec => (
-                <button key={sec.id} onClick={() => scrollTo(sec.id)}
+            <nav className="space-y-1 max-h-[70vh] overflow-y-auto">
+              {toc.map(item => (
+                <button key={item.id} onClick={() => scrollTo(item.id)}
                   className="w-full text-left text-sm px-2 py-1.5 rounded-btn transition-colors"
-                  style={{ color: 'var(--muted-strong)' }}
+                  style={{ color: 'var(--muted-strong)', paddingLeft: item.level === 3 ? 16 : 8 }}
                   onMouseEnter={e => { e.currentTarget.style.background = 'var(--primary-soft)'; e.currentTarget.style.color = 'var(--primary)'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--muted-strong)'; }}>
-                  {sec.heading}
+                  {item.text}
                 </button>
               ))}
             </nav>
@@ -680,27 +589,8 @@ function DocsPage({ navigate, isDark, activeTab, setActiveTab }) {
         </aside>
 
         <article className="rounded-card border shadow-panel overflow-hidden min-w-0" style={{ background: 'var(--surface)', borderColor: 'var(--line-soft)' }}>
-          <header className="px-6 py-5 border-b" style={{ borderColor: 'var(--line-soft)', borderLeft: `4px solid ${accent}` }}>
-            <h2 className="text-2xl font-bold mb-1">{doc.title}</h2>
-            {doc.subtitle && (
-              <p className="text-sm" style={{ color: 'var(--muted)' }}>{doc.subtitle}</p>
-            )}
-          </header>
-
-          <div className="p-6 md:p-8 space-y-12">
-            {doc.sections.map(sec => (
-              <section key={sec.id} id={`doc-${sec.id}`} className="scroll-mt-28">
-                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: accent }} />
-                  {sec.heading}
-                </h3>
-                <div className="space-y-4 pl-0 sm:pl-3">
-                  {sec.blocks.map((block, i) => (
-                    <DocBlock key={i} block={block} accent={accent} navigate={navigate} setActiveTab={setActiveTab} isDark={isDark} />
-                  ))}
-                </div>
-              </section>
-            ))}
+          <div className="p-6 md:p-8" style={{ borderLeft: `4px solid ${accent}` }}>
+            <MarkdownDoc tab={activeTab} setActiveTab={setActiveTab} accent={accent} />
           </div>
 
           {PRODUCTS[activeTab] && (

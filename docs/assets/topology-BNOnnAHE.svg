@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">KunTunet 部署拓扑</title>
+  <desc id="desc">外网用户访问公网映射口，经 KunTunetServer 隧道转发到内网 Client，再到达本地服务。</desc>
+
+  <defs>
+    <marker id="arrow-slate" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M1 1l7 4-7 4V1z" fill="#64748b"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M1 1l7 4-7 4V1z" fill="#ea580c"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M1 1l7 4-7 4V1z" fill="#16a34a"/>
+    </marker>
+    <filter id="shadow" x="-6%" y="-6%" width="112%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <!-- Zone backgrounds -->
+  <rect x="20" y="44" width="220" height="350" rx="18" fill="#f8fafc" stroke="#e2e8f0"/>
+  <rect x="256" y="44" width="300" height="350" rx="18" fill="#fff7ed" stroke="#fed7aa"/>
+  <rect x="572" y="44" width="368" height="350" rx="18" fill="#f0fdf4" stroke="#bbf7d0"/>
+
+  <!-- Zone titles -->
+  <text x="130" y="76" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="13" font-weight="700" fill="#64748b">外网侧</text>
+  <text x="406" y="76" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="13" font-weight="700" fill="#c2410c">公网中转（有公网 IP）</text>
+  <text x="756" y="76" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="13" font-weight="700" fill="#15803d">内网侧（无需入站）</text>
+
+  <!-- User -->
+  <g filter="url(#shadow)">
+    <rect x="48" y="150" width="164" height="120" rx="14" fill="#ffffff" stroke="#cbd5e1"/>
+  </g>
+  <circle cx="130" cy="186" r="18" fill="#e2e8f0"/>
+  <circle cx="130" cy="180" r="8" fill="#94a3b8"/>
+  <path d="M112 214c0-10 8-18 18-18s18 8 18 18" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <text x="130" y="244" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="14" font-weight="700" fill="#334155">外网用户</text>
+  <text x="130" y="264" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="11" fill="#64748b">浏览器 / SSH / 客户端</text>
+
+  <!-- Server -->
+  <g filter="url(#shadow)">
+    <rect x="288" y="112" width="236" height="248" rx="14" fill="#ffffff" stroke="#fb923c" stroke-width="1.5"/>
+  </g>
+  <rect x="308" y="130" width="196" height="40" rx="8" fill="#f97316"/>
+  <text x="406" y="156" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="15" font-weight="700" fill="#ffffff">KunTunetServer</text>
+
+  <rect x="308" y="188" width="196" height="40" rx="8" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="406" y="206" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="11" fill="#9a3412">映射口（业务访问）</text>
+  <text x="406" y="222" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="12" font-weight="700" fill="#c2410c">:9000</text>
+
+  <rect x="308" y="240" width="196" height="40" rx="8" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="406" y="258" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="11" fill="#9a3412">控制口（建隧道）</text>
+  <text x="406" y="274" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="12" font-weight="700" fill="#c2410c">:7000</text>
+
+  <rect x="308" y="292" width="196" height="44" rx="8" fill="#ffedd5"/>
+  <text x="406" y="312" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="11" fill="#9a3412">Dashboard 管理面板</text>
+  <text x="406" y="328" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="12" font-weight="700" fill="#c2410c">:8001</text>
+
+  <!-- Client -->
+  <g filter="url(#shadow)">
+    <rect x="600" y="130" width="148" height="120" rx="12" fill="#ffffff" stroke="#4ade80" stroke-width="1.5"/>
+  </g>
+  <rect x="616" y="146" width="116" height="44" rx="8" fill="#22c55e"/>
+  <text x="674" y="165" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="12" font-weight="700" fill="#ffffff">KunTunet</text>
+  <text x="674" y="182" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="11" font-weight="700" fill="#ffffff">Client / 桌面端</text>
+  <text x="674" y="216" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="11" fill="#166534">主动连出控制口</text>
+  <text x="674" y="234" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="11" fill="#166534">内网无需开放入站</text>
+
+  <!-- Local service -->
+  <g filter="url(#shadow)">
+    <rect x="776" y="148" width="140" height="84" rx="12" fill="#ffffff" stroke="#86efac"/>
+  </g>
+  <text x="846" y="182" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="13" font-weight="700" fill="#166534">本地服务</text>
+  <text x="846" y="204" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="11" fill="#15803d">127.0.0.1:8080</text>
+  <text x="846" y="220" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="10" fill="#4ade80">Web / SSH / DB…</text>
+
+  <!-- Flow 1: user -> mapping port -->
+  <path d="M212 200 H278" stroke="#64748b" stroke-width="2.2" marker-end="url(#arrow-slate)"/>
+  <text x="245" y="188" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="11" font-weight="600" fill="#475569">① 访问</text>
+  <text x="245" y="220" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="10" fill="#64748b">IP:9000</text>
+
+  <!-- Flow 2: control tunnel (client initiates toward server) -->
+  <path d="M600 248 H524" stroke="#ea580c" stroke-width="2.4" stroke-dasharray="7 4" marker-end="url(#arrow-orange)"/>
+  <text x="562" y="236" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="11" font-weight="700" fill="#ea580c">② 隧道 / TLS</text>
+  <text x="562" y="268" text-anchor="middle" font-family="Consolas, Menlo, monospace" font-size="10" fill="#c2410c">:7000 ← Client</text>
+
+  <!-- Flow 3: client -> local -->
+  <path d="M748 190 H776" stroke="#16a34a" stroke-width="2.2" marker-end="url(#arrow-green)"/>
+  <text x="762" y="178" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="11" font-weight="600" fill="#15803d">③ 转发</text>
+
+  <!-- Legend / steps -->
+  <g transform="translate(20, 410)">
+    <rect width="920" height="54" rx="12" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="20" y="22" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="12" font-weight="700" fill="#334155">流量路径</text>
+    <text x="20" y="42" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="12" fill="#475569">① 用户访问公网映射口 → ② Client 主动连控制口建隧道 → ③ Client 转发到本机服务</text>
+    <circle cx="720" cy="27" r="4" fill="#64748b"/>
+    <text x="732" y="31" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="11" fill="#64748b">业务访问</text>
+    <line x1="800" y1="27" x2="828" y2="27" stroke="#ea580c" stroke-width="2.2" stroke-dasharray="5 3"/>
+    <text x="836" y="31" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="11" fill="#ea580c">控制隧道</text>
+  </g>
+</svg>

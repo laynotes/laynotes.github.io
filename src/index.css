@@ -77,6 +77,17 @@ body {
   box-shadow: 0 5px 12px rgba(17, 24, 39, 0.06) !important;
 }
 
+/* Hero / CTA：覆盖默认 34px 小尺寸 */
+:root .button.button-lg,
+:root .button-primary.button-lg {
+  height: 48px !important;
+  min-width: unset !important;
+  padding: 0 32px !important;
+  border-radius: 999px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+}
+
 :root button:disabled {
   cursor: not-allowed !important;
   opacity: 0.55 !important;
