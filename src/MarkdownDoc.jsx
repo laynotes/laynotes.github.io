@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
+import { Copy, Check } from 'lucide-react';
 import 'highlight.js/styles/github-dark.css';
 
 import overviewMd from '../content/docs/overview.md?raw';
@@ -104,6 +105,44 @@ function DocImage({ src, alt }) {
   );
 }
 
+function PreWithCopy({ children }) {
+  const [copied, setCopied] = useState(false);
+  const text = textFromChildren(children).replace(/\n$/, '');
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  return (
+    <div className="code-block relative my-4 rounded-lg overflow-hidden border" style={{ borderColor: 'var(--line-soft)' }}>
+      <button
+        type="button"
+        onClick={handleCopy}
+        className="absolute top-2.5 right-2.5 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border transition-colors"
+        style={{
+          background: copied ? 'rgba(34,197,94,0.15)' : 'rgba(15,23,42,0.72)',
+          borderColor: copied ? 'rgba(34,197,94,0.45)' : 'rgba(148,163,184,0.35)',
+          color: copied ? '#4ade80' : '#e2e8f0',
+          backdropFilter: 'blur(6px)',
+        }}
+        aria-label={copied ? '已复制' : '复制代码'}
+      >
+        {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+        {copied ? '已复制' : '复制'}
+      </button>
+      <pre className="!m-0 !rounded-none overflow-x-auto bg-slate-900 text-slate-100 p-4 pt-12 text-sm leading-relaxed">
+        {children}
+      </pre>
+    </div>
+  );
+}
+
 export function getDocToc(tab) {
   const raw = DOC_MARKDOWN[tab] || DOC_MARKDOWN.overview;
   return extractToc(stripHtmlComments(raw));
@@ -157,22 +196,43 @@ export default function MarkdownDoc({ tab, setActiveTab, accent }) {
     blockquote: ({ children }) => (
       <blockquote
         className="border-l-4 pl-4 my-4 py-2 not-italic rounded-r-card"
-        style={{ borderColor: accent || 'var(--primary)', color: 'var(--muted-strong)', background: 'var(--primary-soft)' }}
+        style={{
+          borderColor: accent || 'var(--primary)',
+          color: 'var(--muted-strong)',
+          background: 'color-mix(in srgb, var(--primary) 12%, var(--surface))',
+        }}
       >
         {children}
       </blockquote>
     ),
+    pre: ({ children }) => <PreWithCopy>{children}</PreWithCopy>,
+    code: ({ className, children, ...props }) => {
+      const isBlock = typeof className === 'string' && className.includes('language-');
+      if (isBlock) {
+        return (
+          <code className={className} {...props}>
+            {children}
+          </code>
+        );
+      }
+      return (
+        <code
+          className="px-1.5 py-0.5 rounded text-[0.9em] font-medium"
+          style={{
+            background: 'var(--canvas)',
+            color: 'var(--text)',
+            border: '1px solid var(--line-soft)',
+          }}
+          {...props}
+        >
+          {children}
+        </code>
+      );
+    },
   }), [accent, setActiveTab]);
 
   return (
-    <div
-      className="prose prose-slate max-w-none dark:prose-invert
-        prose-headings:scroll-mt-28 prose-headings:font-bold
-        prose-a:no-underline hover:prose-a:underline
-        prose-code:before:content-none prose-code:after:content-none
-        prose-pre:bg-slate-900 prose-pre:border prose-pre:border-slate-700
-        prose-table:text-sm"
-    >
+    <div className="markdown-body prose max-w-none prose-headings:scroll-mt-28 prose-headings:font-bold prose-a:no-underline hover:prose-a:underline prose-code:before:content-none prose-code:after:content-none prose-pre:p-0 prose-pre:bg-transparent prose-table:text-sm">
       <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]} components={components}>
         {source}
       </ReactMarkdown>

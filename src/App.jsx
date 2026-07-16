@@ -6,6 +6,9 @@ import {
   TerminalSquare, Box, Play, FileText
 } from 'lucide-react';
 import MarkdownDoc, { getDocToc } from './MarkdownDoc.jsx';
+import tunetPreview from '../content/docs/images/kuntunet/index.png';
+import terminalPreview from '../content/docs/images/kunterminal/index.png';
+import sqlPreview from '../content/docs/images/kunsql/index.png';
 
 const PRODUCTS = {
   tunet: {
@@ -17,6 +20,7 @@ const PRODUCTS = {
     accentDark: '#431407',
     accentBorder: '#fed7aa',
     accentBorderDark: '#9a3412',
+    preview: tunetPreview,
     icon: Network,
     tags: ['TCP 穿透', 'TLS 加密', 'Token 认证', '桌面客户端'],
     features: [
@@ -48,6 +52,7 @@ const PRODUCTS = {
     accentDark: '#052e16',
     accentBorder: '#bbf7d0',
     accentBorderDark: '#166534',
+    preview: terminalPreview,
     icon: TerminalSquare,
     tags: ['AI Copilot', 'Skills 插件', '多模态', 'SSH / SFTP'],
     features: [
@@ -77,6 +82,7 @@ const PRODUCTS = {
     accentDark: '#0c4a6e',
     accentBorder: '#bae6fd',
     accentBorderDark: '#075985',
+    preview: sqlPreview,
     icon: Database,
     tags: ['AI Copilot', 'Skills / 知识库', '多引擎', '执行计划'],
     features: [
@@ -255,41 +261,135 @@ export default function App() {
 }
 
 function HomePage({ navigate, isDark }) {
+  const productList = Object.values(PRODUCTS);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const active = productList[activeIdx];
+
+  useEffect(() => {
+    if (paused) return undefined;
+    const timer = setInterval(() => {
+      setActiveIdx(i => (i + 1) % productList.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [paused, productList.length]);
+
   return (
     <div className="animate-slide-up">
-      <section className="relative overflow-hidden pt-20 pb-24 md:pt-32 md:pb-36 text-center">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 blur-3xl rounded-full pointer-events-none"
-             style={{ background: isDark ? 'rgba(49,104,244,0.06)' : 'rgba(6,182,212,0.1)' }}></div>
-        <div className="relative z-10 max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
-            一站式自研 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500">运维工具集</span>
-          </h1>
-          <p className="text-xl md:text-2xl mb-10 font-light" style={{ color: 'var(--muted)' }}>
-            内网穿透 · AI 终端 · AI 数据库客户端 · 轻量开箱即用
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button onClick={() => document.getElementById('core-tools')?.scrollIntoView({ behavior: 'smooth' })}
-              className="button button-primary button-lg group">
-              浏览全部工具 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button onClick={() => navigate('docs')}
-              className="button button-lg">
-              <Book className="w-4 h-4" /> 阅读使用文档
-            </button>
+      <section className="relative overflow-hidden pt-16 pb-16 md:pt-24 md:pb-24">
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: isDark
+              ? 'radial-gradient(ellipse 60% 50% at 20% 30%, rgba(49,104,244,0.10) 0%, transparent 65%)'
+              : 'radial-gradient(ellipse 60% 50% at 15% 25%, rgba(6,182,212,0.10) 0%, transparent 65%)'
+          }}
+        />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+            <div className="text-center lg:text-left">
+              <p className="mb-4 text-sm font-semibold tracking-[0.18em] uppercase" style={{ color: 'var(--muted-strong)' }}>
+                Kun Suite
+              </p>
+              <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-5 leading-[1.12]">
+                一站式自研{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-500">
+                  运维工具集
+                </span>
+              </h1>
+              <p className="text-lg md:text-xl mb-8 font-light max-w-xl mx-auto lg:mx-0" style={{ color: 'var(--muted)' }}>
+                内网穿透 · AI 终端 · AI 数据库客户端 · 轻量开箱即用
+              </p>
+              <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-4">
+                <button onClick={() => document.getElementById('core-tools')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="button button-primary button-lg group">
+                  浏览全部工具 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+                <button onClick={() => navigate('docs')} className="button button-lg">
+                  <Book className="w-4 h-4" /> 阅读使用文档
+                </button>
+              </div>
+            </div>
+
+            <div
+              className="relative"
+              onMouseEnter={() => setPaused(true)}
+              onMouseLeave={() => setPaused(false)}
+            >
+              <button
+                type="button"
+                onClick={() => navigate(active.id)}
+                className="block w-full text-left rounded-xl overflow-hidden border transition-shadow duration-300 hover:shadow-xl"
+                style={{
+                  borderColor: 'var(--line-soft)',
+                  background: 'var(--surface)',
+                  boxShadow: isDark ? '0 16px 40px rgba(0,0,0,0.35)' : '0 20px 50px -24px rgba(15,23,42,0.28)'
+                }}
+                aria-label={`查看 ${active.name}`}
+              >
+                <div className="relative aspect-[16/10] overflow-hidden">
+                  {productList.map((p, i) => (
+                    <img
+                      key={p.id}
+                      src={p.preview}
+                      alt={`${p.name} 界面`}
+                      className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-[900ms] ease-in-out ${
+                        i === activeIdx ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      draggable={false}
+                    />
+                  ))}
+                </div>
+              </button>
+
+              <div className="mt-4 flex items-center justify-between gap-3 px-1">
+                <button
+                  type="button"
+                  onClick={() => navigate(active.id)}
+                  className="text-sm font-medium transition-colors"
+                  style={{ color: 'var(--muted-strong)' }}
+                  onMouseEnter={e => { e.currentTarget.style.color = active.accent; }}
+                  onMouseLeave={e => { e.currentTarget.style.color = 'var(--muted-strong)'; }}
+                >
+                  {active.name}
+                  <span className="ml-2 font-normal" style={{ color: 'var(--muted)' }}>
+                    {active.slogan.split('，')[0]}
+                  </span>
+                </button>
+                <div className="flex items-center gap-1.5" role="tablist" aria-label="产品预览">
+                  {productList.map((p, i) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={i === activeIdx}
+                      aria-label={p.name}
+                      onClick={() => setActiveIdx(i)}
+                      className="h-1.5 rounded-full transition-all duration-300"
+                      style={{
+                        width: i === activeIdx ? 18 : 6,
+                        background: i === activeIdx ? active.accent : 'var(--line)'
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section id="core-tools" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <section id="core-tools" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <h2 className="text-3xl font-bold text-center mb-12">核心产品矩阵</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {Object.values(PRODUCTS).map(product => (
+          {productList.map(product => (
             <ProductCard key={product.id} product={product} navigate={navigate} isDark={isDark} />
           ))}
         </div>
       </section>
 
-      <section className="py-20 mt-12 border-y" style={{ background: isDark ? 'rgba(17,24,39,0.4)' : 'rgba(241,245,249,0.5)', borderColor: 'var(--line-soft)' }}>
+      <section className="py-20 mt-4 border-y" style={{ background: isDark ? 'rgba(17,24,39,0.4)' : 'rgba(241,245,249,0.5)', borderColor: 'var(--line-soft)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">套件联动，释放无限潜能</h2>
@@ -304,14 +404,14 @@ function HomePage({ navigate, isDark }) {
                      style={{ background: 'var(--surface)', borderColor: 'var(--line-soft)' }}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 w-2/5">
-                      <div className="p-2 rounded-btn" style={{ background: P1.accentSoft }}>
+                      <div className="p-2 rounded-btn" style={{ background: isDark ? `${P1.accent}22` : P1.accentSoft }}>
                         <P1.icon className="w-5 h-5" style={{ color: P1.accent }} />
                       </div>
                       <span className="font-semibold text-sm sm:text-base">{P1.name}</span>
                     </div>
                     <div className="flex-1 flex justify-center font-bold text-xl" style={{ color: 'var(--line)' }}>+</div>
                     <div className="flex items-center gap-3 w-2/5 flex-row-reverse text-right">
-                      <div className="p-2 rounded-btn" style={{ background: P2.accentSoft }}>
+                      <div className="p-2 rounded-btn" style={{ background: isDark ? `${P2.accent}22` : P2.accentSoft }}>
                         <P2.icon className="w-5 h-5" style={{ color: P2.accent }} />
                       </div>
                       <span className="font-semibold text-sm sm:text-base">{P2.name}</span>
@@ -351,16 +451,17 @@ function HomePage({ navigate, isDark }) {
 
 function ProductCard({ product, navigate, isDark }) {
   const isAI = product.id === 'terminal' || product.id === 'sql';
+  const softBg = isDark ? `${product.accent}22` : product.accentSoft;
   return (
     <div className="rounded-card p-6 border transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group flex flex-col relative"
          style={{ background: 'var(--surface)', borderColor: isDark ? product.accentBorderDark : product.accentBorder }}>
       {isAI && (
         <span className="absolute top-4 right-4 text-[10px] font-bold px-2 py-0.5 rounded-full border"
-              style={{ color: product.accent, borderColor: product.accent, background: product.accentSoft }}>
+              style={{ color: product.accent, borderColor: product.accent, background: softBg }}>
           AI Copilot
         </span>
       )}
-      <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-6" style={{ background: product.accentSoft }}>
+      <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-6" style={{ background: softBg }}>
         <product.icon className="w-7 h-7" style={{ color: product.accent }} />
       </div>
       <h3 className="text-2xl font-bold mb-3">{product.name}</h3>
@@ -394,7 +495,7 @@ function ProductPage({ product, navigate, isDark }) {
   return (
     <div className="animate-slide-up">
       <div className="relative overflow-hidden pt-16 pb-20 border-b" style={{ borderColor: isDark ? product.accentBorderDark : product.accentBorder }}>
-        <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ background: product.accentSoft }}></div>
+        <div className="absolute inset-0 pointer-events-none" style={{ background: isDark ? `${product.accent}18` : product.accentSoft, opacity: isDark ? 1 : 0.4 }}></div>
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
           <div className="w-20 h-20 rounded-card shadow-xl flex items-center justify-center mb-6 border"
                style={{ background: 'var(--surface)', borderColor: isDark ? product.accentBorderDark : product.accentBorder }}>
@@ -431,6 +532,13 @@ function ProductPage({ product, navigate, isDark }) {
               <Book className="w-5 h-5" /> 使用文档
             </button>
           </div>
+
+          {product.preview && (
+            <div className="mt-12 w-full max-w-4xl mx-auto rounded-2xl overflow-hidden border shadow-xl"
+                 style={{ borderColor: isDark ? product.accentBorderDark : product.accentBorder }}>
+              <img src={product.preview} alt={`${product.name} 界面预览`} className="w-full h-auto object-cover object-top" />
+            </div>
+          )}
         </div>
       </div>
 
