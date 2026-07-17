@@ -334,15 +334,19 @@ function HomePage({ navigate, isDark }) {
                 }}
                 aria-label={`查看 ${active.name}`}
               >
-                <div className="relative aspect-[16/10] overflow-hidden">
+                <div
+                  className="relative aspect-[16/10] overflow-hidden"
+                  style={{ background: 'var(--surface)' }}
+                >
                   {productList.map((p, i) => (
                     <img
                       key={p.id}
                       src={isDark ? p.previewDark : p.preview}
                       alt={`${p.name} 界面`}
-                      className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-[900ms] ease-in-out ${
+                      className={`absolute inset-0 w-full h-full max-w-none transition-opacity duration-[900ms] ease-in-out ${
                         i === activeIdx ? 'opacity-100' : 'opacity-0'
                       }`}
+                      style={{ objectFit: 'fill' }}
                       draggable={false}
                     />
                   ))}
