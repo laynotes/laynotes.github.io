@@ -21,8 +21,22 @@
               "os": "macOS",
               "arch": "Apple Silicon (arm64)",
               "type": "磁盘映像 (.dmg)",
-              "size": "10.46 MB",
+              "size": "10.5 MB",
               "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/KunTerminal-1.7.0-macos-arm64.dmg"
+            },
+            {
+              "os": "Windows",
+              "arch": "x86_64 (64-bit)",
+              "type": "安装程序 (.exe)",
+              "size": "8.59 MB",
+              "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/KunTerminal-1.7.0-windows-amd64-setup.exe"
+            },
+            {
+              "os": "Linux",
+              "arch": "x86_64 (amd64)",
+              "type": "安装包 (.deb)",
+              "size": "7.18 MB",
+              "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/KunTerminal-1.7.0-linux-amd64.deb"
             },
             {
               "os": "Linux",

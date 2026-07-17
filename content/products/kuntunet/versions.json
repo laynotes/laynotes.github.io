@@ -65,6 +65,27 @@
           "hint": "可视化管理隧道、查看状态与日志；与命令行一体包分开提供。",
           "files": [
             {
+              "os": "macOS",
+              "arch": "Apple Silicon (arm64)",
+              "type": "磁盘映像 (.dmg)",
+              "size": "4.34 MB",
+              "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/KunTunet-1.4.0-macos-arm64.dmg"
+            },
+            {
+              "os": "Windows",
+              "arch": "x86_64 (64-bit)",
+              "type": "安装程序 (.exe)",
+              "size": "4.98 MB",
+              "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/KunTunet-1.4.0-windows-amd64-setup.exe"
+            },
+            {
+              "os": "Linux",
+              "arch": "x86_64 (amd64)",
+              "type": "安装包 (.deb)",
+              "size": "3.48 MB",
+              "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/KunTunet-1.4.0-linux-amd64.deb"
+            },
+            {
               "os": "Linux",
               "arch": "arm64",
               "type": "安装包 (.deb)",
