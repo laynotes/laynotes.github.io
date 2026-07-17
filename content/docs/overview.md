@@ -33,7 +33,7 @@ Kun Suite 当前包含三款独立工具，可单独使用，也可组合：
 2. 选择产品与系统架构（Windows / macOS / Linux）。
 3. 安装后按对应产品文档完成首次配置。
 
-> **提示**：KunTunet 的 Server 包、Client 包与桌面 GUI 是三套分开的安装包，不要搞混。
+> **提示**：KunTunet 的命令行一体部署包（Server / Client / Admin）与桌面 GUI 是两套安装包，不要搞混。
 
 ## 阅读导航
 

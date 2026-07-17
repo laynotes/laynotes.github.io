@@ -2,8 +2,8 @@
   "product": "kunterminal",
   "releases": [
     {
-      "version": "v1.6.0",
-      "date": "2026-06-15",
+      "version": "v1.7.0",
+      "date": "2026-07-17",
       "summary": "强化 AI Copilot 与终端会话上下文联动，完善 Skills 与多模态提问体验。",
       "notes": [
         "AI Copilot 可结合当前终端会话与远程文件上下文答疑",
@@ -17,12 +17,20 @@
           "title": "桌面客户端",
           "hint": "跨平台 SSH / SFTP 终端，内置 AI Copilot。",
           "files": [
-            { "os": "Windows", "arch": "x86_64 (64-bit)", "type": "安装包 (.exe)", "size": "—", "url": "" },
-            { "os": "Windows", "arch": "x86_64 (64-bit)", "type": "绿色便携版 (.zip)", "size": "—", "url": "" },
-            { "os": "macOS", "arch": "Apple Silicon (arm64)", "type": "磁盘映像 (.dmg)", "size": "—", "url": "" },
-            { "os": "macOS", "arch": "Intel (x86_64)", "type": "磁盘映像 (.dmg)", "size": "—", "url": "" },
-            { "os": "Linux", "arch": "x86_64 (amd64)", "type": "压缩包 (.tar.gz)", "size": "—", "url": "" },
-            { "os": "Linux", "arch": "arm64", "type": "压缩包 (.tar.gz)", "size": "—", "url": "" }
+            {
+              "os": "macOS",
+              "arch": "Apple Silicon (arm64)",
+              "type": "磁盘映像 (.dmg)",
+              "size": "10.46 MB",
+              "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/KunTerminal-1.7.0-macos-arm64.dmg"
+            },
+            {
+              "os": "Linux",
+              "arch": "arm64",
+              "type": "安装包 (.deb)",
+              "size": "6.75 MB",
+              "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/KunTerminal-1.7.0-linux-arm64.deb"
+            }
           ]
         }
       ]

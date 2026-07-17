@@ -32,7 +32,7 @@ const PRODUCTS = {
   tunet: {
     id: 'tunet',
     name: 'KunTunet',
-    slogan: '轻量 TCP 内网穿透 · Server 包 / Client 包 / 桌面端',
+    slogan: '轻量 TCP 内网穿透 · 一体部署包 + 桌面端',
     accent: '#f97316',
     accentSoft: '#fff7ed',
     accentDark: '#431407',
@@ -41,19 +41,19 @@ const PRODUCTS = {
     preview: tunetPreview,
     previewDark: tunetPreviewDark,
     icon: Network,
-    tags: ['Server 包', 'Client 包', '桌面客户端', 'Dashboard'],
+    tags: ['一体部署包', 'Server · Client · Admin', '桌面客户端', 'Dashboard'],
     features: [
-      { title: '三种独立安装包', desc: 'Server 包部署在公网中转；Client 包部署在内网机器；桌面端单独提供 GUI。三者分开下载，按角色安装即可。' },
+      { title: '一体部署包', desc: '一个压缩包内含 KunTunetServer、KunTunetClient、KunTunetAdmin：公网取 Server，内网取 Client，管理按需用 Admin。桌面端单独提供 GUI。' },
       { title: 'TCP 中转穿透', desc: '内网 Client 主动连公网 Server，把本地 TCP 服务映射到公网端口，外网即可访问；内网无需对公网开放入站。' },
       { title: 'TLS + Token', desc: '支持证书加密与 Token 认证（含多 Agent、过期与撤销），适合正式环境部署。' },
       { title: 'Dashboard 监控', desc: '内置 Web 管理面板，查看在线 Agent、隧道状态与流量统计；支持断线自愈与心跳检测。' }
     ],
-    intro: 'KunTunet 通过一台有公网 IP 的中转服务器，把内网 TCP 服务（SSH、数据库、Web 等）映射到公网端口。提供独立的 Server 部署包、Client 部署包，以及桌面客户端：公网装 Server、内网装 Client，本机也可用 GUI 管理隧道。',
-    techStack: 'KunTunetServer 包 · KunTunetClient 包 · 桌面 GUI · Windows / macOS / Linux',
+    intro: 'KunTunet 通过一台有公网 IP 的中转服务器，把内网 TCP 服务（SSH、数据库、Web 等）映射到公网端口。命令行一体部署包同时提供 Server / Client / Admin；另有独立桌面客户端，可用 GUI 管理隧道。',
+    techStack: '一体部署包（Server · Client · Admin）· 桌面 GUI · Windows / macOS / Linux',
     quickStart: [
-      { comment: '# 1. 公网机器：解压 Server 包，启动服务端' },
+      { comment: '# 1. 下载一体部署包，公网机器启动 Server' },
       { cmd: 'KunTunetServer -control 0.0.0.0:7000 -token YOUR_TOKEN -mgmt 127.0.0.1:8001' },
-      { comment: '# 2. 内网机器：解压 Client 包，启动客户端（映射本地 8080 → 公网 9000）' },
+      { comment: '# 2. 同一部署包内取 Client，内网机器启动（映射本地 8080 → 公网 9000）' },
       { cmd: 'KunTunetClient -server PUBLIC_IP:7000 -token YOUR_TOKEN -name web -remote 0.0.0.0:9000 -local 127.0.0.1:8080' },
       { comment: '# 3. 或安装桌面端，在 GUI 中配置隧道并一键启停' },
       { cmd: '# 控制面板 → 隧道配置 → 新建隧道' },
@@ -882,6 +882,23 @@ function DownloadPage({ navigate, isDark }) {
                 <h3 className="text-lg font-bold">{channel.title}</h3>
                 {channel.hint && (
                   <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>{channel.hint}</p>
+                )}
+                {Array.isArray(channel.includes) && channel.includes.length > 0 && (
+                  <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {channel.includes.map(item => (
+                      <div
+                        key={item.name}
+                        className="rounded-card border px-3 py-3"
+                        style={{
+                          background: isDark ? `${activeProduct.accent}14` : activeProduct.accentSoft,
+                          borderColor: isDark ? activeProduct.accentBorderDark : activeProduct.accentBorder
+                        }}
+                      >
+                        <div className="text-sm font-bold" style={{ color: activeProduct.accent }}>{item.name}</div>
+                        <div className="text-xs mt-1" style={{ color: 'var(--muted-strong)' }}>{item.desc}</div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
               {renderOsFiles(channel.files)}

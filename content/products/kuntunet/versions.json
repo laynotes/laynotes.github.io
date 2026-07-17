@@ -3,50 +3,74 @@
   "releases": [
     {
       "version": "v1.4.0",
-      "date": "2026-07-01",
-      "summary": "独立拆分 Server / Client 部署包，完善桌面端隧道管理与 Dashboard。",
+      "date": "2026-07-17",
+      "summary": "命令行一体包（Server / Client / Admin）与桌面端分开发布，完善隧道管理与 Dashboard。",
       "notes": [
-        "Server 包与 Client 包分开发布，按部署角色独立下载",
-        "桌面端优化隧道配置与运行状态展示",
-        "Dashboard 支持更清晰的 Agent / 隧道与流量查看",
-        "增强 Token / TLS 正式环境部署说明"
+        "命令行部署包一次下载，内含 KunTunetServer、KunTunetClient、KunTunetAdmin",
+        "公网机器取用 Server，内网机器取用 Client，管理端按需使用 Admin",
+        "桌面端单独提供 GUI，可视化管理隧道与状态",
+        "Dashboard 支持更清晰的 Agent / 隧道与流量查看"
       ],
       "channels": [
         {
-          "id": "server",
-          "title": "Server 部署包",
-          "hint": "安装在有公网 IP 的中转服务器，提供 KunTunetServer 与服务脚本。",
+          "id": "deploy",
+          "title": "命令行一体部署包",
+          "hint": "一个压缩包内同时包含 Server、Client、Admin，解压后按角色取用对应二进制即可，无需分别下载。",
+          "includes": [
+            { "name": "Server", "desc": "公网中转 · KunTunetServer" },
+            { "name": "Client", "desc": "内网隧道 · KunTunetClient" },
+            { "name": "Admin", "desc": "管理工具 · KunTunetAdmin" }
+          ],
           "files": [
-            { "os": "Linux", "arch": "x86_64 (amd64)", "type": "Server 部署包 (.tar.gz)", "size": "—", "url": "" },
-            { "os": "Linux", "arch": "arm64", "type": "Server 部署包 (.tar.gz)", "size": "—", "url": "" },
-            { "os": "Windows", "arch": "x86_64 (64-bit)", "type": "Server 部署包 (.zip)", "size": "—", "url": "" },
-            { "os": "macOS", "arch": "Apple Silicon (arm64)", "type": "Server 部署包 (.tar.gz)", "size": "—", "url": "" },
-            { "os": "macOS", "arch": "Intel (x86_64)", "type": "Server 部署包 (.tar.gz)", "size": "—", "url": "" }
-          ]
-        },
-        {
-          "id": "client",
-          "title": "Client 部署包",
-          "hint": "安装在内网机器，提供 KunTunetClient；与 Server 包分开下载。",
-          "files": [
-            { "os": "Linux", "arch": "x86_64 (amd64)", "type": "Client 部署包 (.tar.gz)", "size": "—", "url": "" },
-            { "os": "Linux", "arch": "arm64", "type": "Client 部署包 (.tar.gz)", "size": "—", "url": "" },
-            { "os": "Windows", "arch": "x86_64 (64-bit)", "type": "Client 部署包 (.zip)", "size": "—", "url": "" },
-            { "os": "macOS", "arch": "Apple Silicon (arm64)", "type": "Client 部署包 (.tar.gz)", "size": "—", "url": "" },
-            { "os": "macOS", "arch": "Intel (x86_64)", "type": "Client 部署包 (.tar.gz)", "size": "—", "url": "" }
+            {
+              "os": "Linux",
+              "arch": "x86_64 (amd64)",
+              "type": "一体部署包 (.tar.gz)",
+              "size": "9.62 MB",
+              "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/kuntunet_v1.4.0_linux_amd64.tar.gz"
+            },
+            {
+              "os": "Linux",
+              "arch": "arm64",
+              "type": "一体部署包 (.tar.gz)",
+              "size": "8.67 MB",
+              "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/kuntunet_v1.4.0_linux_arm64.tar.gz"
+            },
+            {
+              "os": "Windows",
+              "arch": "x86_64 (64-bit)",
+              "type": "一体部署包 (.zip)",
+              "size": "9.85 MB",
+              "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/kuntunet_v1.4.0_windows_amd64.zip"
+            },
+            {
+              "os": "macOS",
+              "arch": "Apple Silicon (arm64)",
+              "type": "一体部署包 (.tar.gz)",
+              "size": "9.00 MB",
+              "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/kuntunet_v1.4.0_darwin_arm64.tar.gz"
+            },
+            {
+              "os": "macOS",
+              "arch": "Intel (x86_64)",
+              "type": "一体部署包 (.tar.gz)",
+              "size": "9.76 MB",
+              "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/kuntunet_v1.4.0_darwin_amd64.tar.gz"
+            }
           ]
         },
         {
           "id": "desktop",
           "title": "桌面客户端",
-          "hint": "可视化管理隧道、查看状态与日志，适合本机图形界面操作。",
+          "hint": "可视化管理隧道、查看状态与日志；与命令行一体包分开提供。",
           "files": [
-            { "os": "Windows", "arch": "x86_64 (64-bit)", "type": "安装包 (.exe)", "size": "—", "url": "" },
-            { "os": "Windows", "arch": "x86_64 (64-bit)", "type": "绿色便携版 (.zip)", "size": "—", "url": "" },
-            { "os": "macOS", "arch": "Apple Silicon (arm64)", "type": "磁盘映像 (.dmg)", "size": "—", "url": "" },
-            { "os": "macOS", "arch": "Intel (x86_64)", "type": "磁盘映像 (.dmg)", "size": "—", "url": "" },
-            { "os": "Linux", "arch": "x86_64 (amd64)", "type": "压缩包 (.tar.gz)", "size": "—", "url": "" },
-            { "os": "Linux", "arch": "arm64", "type": "压缩包 (.tar.gz)", "size": "—", "url": "" }
+            {
+              "os": "Linux",
+              "arch": "arm64",
+              "type": "安装包 (.deb)",
+              "size": "3.11 MB",
+              "url": "https://github.com/laynotes/laynotes.github.io/releases/download/v1.1-release/KunTunet-1.4.0-linux-arm64.deb"
+            }
           ]
         }
       ]
