@@ -1,0 +1,31 @@
+{
+  "product": "kunsql",
+  "releases": [
+    {
+      "version": "v1.0.1",
+      "date": "2026-06-01",
+      "summary": "首个稳定小版本：完善多引擎连接与 AI Copilot 写 SQL / 读执行计划体验。",
+      "notes": [
+        "支持 PostgreSQL、MySQL、SQLite、SQL Server、MongoDB、Redis、ClickHouse 等引擎",
+        "AI Copilot 支持 @ 引用 Schema 对象生成与解读 SQL",
+        "查询结果支持导出 CSV / TSV / JSON / SQL",
+        "凭据加密保存在本机，可选云端 API 或本地 AI CLI"
+      ],
+      "channels": [
+        {
+          "id": "desktop",
+          "title": "桌面客户端",
+          "hint": "多引擎数据库客户端，内置 AI Copilot。",
+          "files": [
+            { "os": "Windows", "arch": "x86_64 (64-bit)", "type": "安装包 (.exe)", "size": "—", "url": "" },
+            { "os": "Windows", "arch": "x86_64 (64-bit)", "type": "绿色便携版 (.zip)", "size": "—", "url": "" },
+            { "os": "macOS", "arch": "Apple Silicon (arm64)", "type": "磁盘映像 (.dmg)", "size": "—", "url": "" },
+            { "os": "macOS", "arch": "Intel (x86_64)", "type": "磁盘映像 (.dmg)", "size": "—", "url": "" },
+            { "os": "Linux", "arch": "x86_64 (amd64)", "type": "压缩包 (.tar.gz)", "size": "—", "url": "" },
+            { "os": "Linux", "arch": "arm64", "type": "压缩包 (.tar.gz)", "size": "—", "url": "" }
+          ]
+        }
+      ]
+    }
+  ]
+}

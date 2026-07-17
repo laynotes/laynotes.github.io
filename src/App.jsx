@@ -12,12 +12,27 @@ import terminalPreview from '../content/docs/images/kunterminal/index.png';
 import terminalPreviewDark from '../content/docs/images/kunterminal/index_dark.png';
 import sqlPreview from '../content/docs/images/kunsql/index.png';
 import sqlPreviewDark from '../content/docs/images/kunsql/index_dark.png';
+import tunetVersions from '../content/products/kuntunet/versions.json';
+import terminalVersions from '../content/products/kunterminal/versions.json';
+import sqlVersions from '../content/products/kunsql/versions.json';
+
+/** releases[0] 为最新版本 */
+const PRODUCT_VERSIONS = {
+  tunet: tunetVersions,
+  terminal: terminalVersions,
+  sql: sqlVersions
+};
+
+function getLatestRelease(productId) {
+  const doc = PRODUCT_VERSIONS[productId];
+  return doc?.releases?.[0] || null;
+}
 
 const PRODUCTS = {
   tunet: {
     id: 'tunet',
     name: 'KunTunet',
-    slogan: '轻量 TCP 内网穿透，中转多路复用 · TLS · Dashboard',
+    slogan: '轻量 TCP 内网穿透 · Server 包 / Client 包 / 桌面端',
     accent: '#f97316',
     accentSoft: '#fff7ed',
     accentDark: '#431407',
@@ -26,25 +41,25 @@ const PRODUCTS = {
     preview: tunetPreview,
     previewDark: tunetPreviewDark,
     icon: Network,
-    tags: ['TCP 穿透', 'TLS 加密', 'Token 认证', '桌面客户端'],
+    tags: ['Server 包', 'Client 包', '桌面客户端', 'Dashboard'],
     features: [
-      { title: 'TCP 中转穿透', desc: '内网 Client 主动连公网 Server，把本地 TCP 服务映射到公网端口，外网即可访问。' },
+      { title: '三种独立安装包', desc: 'Server 包部署在公网中转；Client 包部署在内网机器；桌面端单独提供 GUI。三者分开下载，按角色安装即可。' },
+      { title: 'TCP 中转穿透', desc: '内网 Client 主动连公网 Server，把本地 TCP 服务映射到公网端口，外网即可访问；内网无需对公网开放入站。' },
       { title: 'TLS + Token', desc: '支持证书加密与 Token 认证（含多 Agent、过期与撤销），适合正式环境部署。' },
-      { title: 'Dashboard 监控', desc: '内置 Web 管理面板，查看在线 Agent、隧道状态与流量统计。' },
-      { title: '断线自愈', desc: '自动重连、心跳检测，Client 常驻后网络抖动可自行恢复。' }
+      { title: 'Dashboard 监控', desc: '内置 Web 管理面板，查看在线 Agent、隧道状态与流量统计；支持断线自愈与心跳检测。' }
     ],
-    intro: 'KunTunet 通过一台公网中转服务器，把内网机器上的 TCP 服务暴露到公网端口。提供服务端、命令行客户端，以及可视化桌面客户端，适合 SSH、数据库、Web 等 TCP 场景。',
-    techStack: 'Server + Client + 桌面 GUI · Windows / macOS / Linux',
-    version: 'v1.3',
+    intro: 'KunTunet 通过一台有公网 IP 的中转服务器，把内网 TCP 服务（SSH、数据库、Web 等）映射到公网端口。提供独立的 Server 部署包、Client 部署包，以及桌面客户端：公网装 Server、内网装 Client，本机也可用 GUI 管理隧道。',
+    techStack: 'KunTunetServer 包 · KunTunetClient 包 · 桌面 GUI · Windows / macOS / Linux',
     quickStart: [
-      { comment: '# 1. 公网机器启动服务端' },
+      { comment: '# 1. 公网机器：解压 Server 包，启动服务端' },
       { cmd: 'KunTunetServer -control 0.0.0.0:7000 -token YOUR_TOKEN -mgmt 127.0.0.1:8001' },
-      { comment: '# 2. 内网机器启动客户端（映射本地 8080 → 公网 9000）' },
+      { comment: '# 2. 内网机器：解压 Client 包，启动客户端（映射本地 8080 → 公网 9000）' },
       { cmd: 'KunTunetClient -server PUBLIC_IP:7000 -token YOUR_TOKEN -name web -remote 0.0.0.0:9000 -local 127.0.0.1:8080' },
-      { comment: '# 3. 外网访问映射端口' },
+      { comment: '# 3. 或安装桌面端，在 GUI 中配置隧道并一键启停' },
+      { cmd: '# 控制面板 → 隧道配置 → 新建隧道' },
+      { comment: '# 4. 外网访问映射端口 / 打开 Dashboard' },
       { cmd: 'curl http://PUBLIC_IP:9000' },
-      { comment: '# 4. 浏览器打开 Dashboard' },
-      { cmd: '# http://PUBLIC_IP:8001' }
+      { cmd: '# Dashboard: http://PUBLIC_IP:8001' }
     ]
   },
   terminal: {
@@ -68,7 +83,6 @@ const PRODUCTS = {
     ],
     intro: 'KunTerminal 把 SSH、SFTP、远程 IDE 与 AI Copilot 放在同一桌面端：连上主机后即可边操作边问 AI，适合排障、改配置与批量运维。支持云端 API 与本地 CLI，数据与会话留在本机。',
     techStack: '桌面客户端 · AI Copilot · Windows / macOS / Linux',
-    version: 'v1.6.0',
     quickStart: [
       { comment: '# 1. 安装并打开 KunTerminal，登记主机后「极速连通」' },
       { cmd: '# 连接管理 → 登记主机 → 极速连通' },
@@ -99,7 +113,6 @@ const PRODUCTS = {
     ],
     intro: 'KunSQL 是带 AI Copilot 的本地多引擎数据库客户端：连上库后即可边查边问，生成 SQL、解读执行计划、基于知识库答疑。凭据加密保存在本机，可选云端 API 或本地 AI CLI。',
     techStack: '桌面客户端 · AI Copilot · Windows / macOS / Linux',
-    version: 'v1.0.1',
     quickStart: [
       { comment: '# 1. 安装 KunSQL，新建连接并「测试连接」→「连接」' },
       { cmd: '# 选择引擎 → 填写地址账号 → 连接' },
@@ -110,6 +123,12 @@ const PRODUCTS = {
     ]
   }
 };
+
+Object.values(PRODUCTS).forEach(product => {
+  const latest = getLatestRelease(product.id);
+  product.version = latest?.version || '—';
+  product.release = latest;
+});
 
 const SYNERGY_CASES = [
   { p1: 'tunet', p2: 'terminal', desc: '穿透内网后 SSH / SFTP，并用 AI Copilot 排障' },
@@ -731,27 +750,60 @@ function DocsPage({ navigate, isDark, activeTab, setActiveTab }) {
   );
 }
 
+function groupFilesByOs(files = []) {
+  return files.reduce((acc, file) => {
+    if (!acc[file.os]) acc[file.os] = [];
+    acc[file.os].push(file);
+    return acc;
+  }, {});
+}
+
 function DownloadPage({ navigate, isDark }) {
   const [activeTab, setActiveTab] = useState('tunet');
 
-  const downloads = {
-    Windows: [
-      { arch: 'x86_64 (64-bit)', type: '安装包 (.exe)', size: '—' },
-      { arch: 'x86_64 (64-bit)', type: '绿色便携版 (.zip)', size: '—' }
-    ],
-    macOS: [
-      { arch: 'Apple Silicon (arm64)', type: '磁盘映像 (.dmg)', size: '—' },
-      { arch: 'Intel (x86_64)', type: '磁盘映像 (.dmg)', size: '—' }
-    ],
-    Linux: [
-      { arch: 'x86_64 (amd64)', type: '压缩包 (.tar.gz)', size: '—' },
-      { arch: 'arm64', type: '压缩包 (.tar.gz)', size: '—' }
-    ]
-  };
-
   const activeProduct = PRODUCTS[activeTab];
+  const latest = activeProduct.release || getLatestRelease(activeTab);
   const osIcons = { Windows: Monitor, macOS: Server, Linux: Globe };
   const osColors = { Windows: '#3b82f6', macOS: 'var(--text)', Linux: '#ca8a04' };
+  const channels = latest?.channels || [];
+
+  const renderOsFiles = (files) => Object.entries(groupFilesByOs(files)).map(([os, osFiles]) => {
+    const OsIcon = osIcons[os] || Globe;
+    return (
+      <div key={os} className="mb-8 last:mb-0">
+        <h4 className="text-base font-bold mb-3 flex items-center gap-2 border-b pb-2" style={{ borderColor: 'var(--line-soft)' }}>
+          <OsIcon className="w-5 h-5" style={{ color: osColors[os] || 'var(--muted)' }} /> {os}
+        </h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {osFiles.map((file, idx) => {
+            const ready = Boolean(file.url);
+            return (
+              <div key={`${file.arch}-${file.type}-${idx}`} className="flex flex-col p-4 rounded-card border transition-colors group"
+                   style={{ background: isDark ? 'rgba(255,255,255,0.03)' : '#f8fafc', borderColor: 'var(--line-soft)' }}
+                   onMouseEnter={e => e.currentTarget.style.borderColor = activeProduct.accent}
+                   onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--line-soft)'}>
+                <span className="font-semibold">{file.arch}</span>
+                <span className="text-xs mt-1 mb-4" style={{ color: 'var(--muted)' }}>{file.type} • {file.size || '—'}</span>
+                {ready ? (
+                  <a
+                    href={file.url}
+                    className="button-primary mt-auto w-full py-2 flex items-center justify-center gap-2"
+                    download
+                  >
+                    <Download className="w-4 h-4" /> 立即下载
+                  </a>
+                ) : (
+                  <button className="button-primary mt-auto w-full py-2 flex items-center justify-center gap-2" disabled title="下载通道即将开放">
+                    <Download className="w-4 h-4" /> 即将开放
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  });
 
   return (
     <div className="animate-slide-up max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -787,41 +839,54 @@ function DownloadPage({ navigate, isDark }) {
               {activeProduct.name}
               <span className="text-sm px-2 py-0.5 rounded-input border"
                     style={{ background: 'var(--surface)', color: activeProduct.accent, borderColor: isDark ? activeProduct.accentBorderDark : activeProduct.accentBorder }}>
-                Latest {activeProduct.version}
+                Latest {latest?.version || activeProduct.version}
               </span>
             </h2>
             <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>{activeProduct.slogan}</p>
+            {latest?.date && (
+              <p className="text-xs mt-2" style={{ color: 'var(--muted)' }}>发布日期 {latest.date}</p>
+            )}
           </div>
           <button onClick={() => navigate('docs', { docsTab: activeTab })} className="text-sm font-medium hover:underline" style={{ color: activeProduct.accent }}>
             查看使用文档 →
           </button>
         </div>
 
+        {latest && (
+          <div className="px-6 py-5 border-b" style={{ borderColor: 'var(--line-soft)', background: isDark ? 'rgba(255,255,255,0.02)' : '#fafbfc' }}>
+            <h3 className="text-sm font-bold mb-2" style={{ color: 'var(--text)' }}>更新记录</h3>
+            {latest.summary && (
+              <p className="text-sm mb-3" style={{ color: 'var(--muted-strong)' }}>{latest.summary}</p>
+            )}
+            {Array.isArray(latest.notes) && latest.notes.length > 0 && (
+              <ul className="space-y-1.5 text-sm" style={{ color: 'var(--muted)' }}>
+                {latest.notes.map((note, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0" style={{ color: activeProduct.accent }} />
+                    <span>{note}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+
         <div className="p-6">
-          {Object.entries(downloads).map(([os, files]) => {
-            const OsIcon = osIcons[os];
-            return (
-              <div key={os} className="mb-10 last:mb-0">
-                <h3 className="text-lg font-bold mb-4 flex items-center gap-2 border-b pb-2" style={{ borderColor: 'var(--line-soft)' }}>
-                  <OsIcon className="w-5 h-5" style={{ color: osColors[os] }} /> {os}
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {files.map((file, idx) => (
-                    <div key={idx} className="flex flex-col p-4 rounded-card border transition-colors group"
-                         style={{ background: isDark ? 'rgba(255,255,255,0.03)' : '#f8fafc', borderColor: 'var(--line-soft)' }}
-                         onMouseEnter={e => e.currentTarget.style.borderColor = activeProduct.accent}
-                         onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--line-soft)'}>
-                      <span className="font-semibold">{file.arch}</span>
-                      <span className="text-xs mt-1 mb-4" style={{ color: 'var(--muted)' }}>{file.type} • {file.size}</span>
-                      <button className="button-primary mt-auto w-full py-2 flex items-center justify-center gap-2" disabled title="下载通道即将开放">
-                        <Download className="w-4 h-4" /> 即将开放
-                      </button>
-                    </div>
-                  ))}
-                </div>
+          {channels.map((channel, sectionIdx) => (
+            <div
+              key={channel.id}
+              className={sectionIdx < channels.length - 1 ? 'mb-10 pb-10 border-b' : ''}
+              style={{ borderColor: 'var(--line-soft)' }}
+            >
+              <div className="mb-5">
+                <h3 className="text-lg font-bold">{channel.title}</h3>
+                {channel.hint && (
+                  <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>{channel.hint}</p>
+                )}
               </div>
-            );
-          })}
+              {renderOsFiles(channel.files)}
+            </div>
+          ))}
         </div>
       </div>
 

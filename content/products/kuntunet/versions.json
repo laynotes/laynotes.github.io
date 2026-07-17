@@ -1,0 +1,55 @@
+{
+  "product": "kuntunet",
+  "releases": [
+    {
+      "version": "v1.4.0",
+      "date": "2026-07-01",
+      "summary": "独立拆分 Server / Client 部署包，完善桌面端隧道管理与 Dashboard。",
+      "notes": [
+        "Server 包与 Client 包分开发布，按部署角色独立下载",
+        "桌面端优化隧道配置与运行状态展示",
+        "Dashboard 支持更清晰的 Agent / 隧道与流量查看",
+        "增强 Token / TLS 正式环境部署说明"
+      ],
+      "channels": [
+        {
+          "id": "server",
+          "title": "Server 部署包",
+          "hint": "安装在有公网 IP 的中转服务器，提供 KunTunetServer 与服务脚本。",
+          "files": [
+            { "os": "Linux", "arch": "x86_64 (amd64)", "type": "Server 部署包 (.tar.gz)", "size": "—", "url": "" },
+            { "os": "Linux", "arch": "arm64", "type": "Server 部署包 (.tar.gz)", "size": "—", "url": "" },
+            { "os": "Windows", "arch": "x86_64 (64-bit)", "type": "Server 部署包 (.zip)", "size": "—", "url": "" },
+            { "os": "macOS", "arch": "Apple Silicon (arm64)", "type": "Server 部署包 (.tar.gz)", "size": "—", "url": "" },
+            { "os": "macOS", "arch": "Intel (x86_64)", "type": "Server 部署包 (.tar.gz)", "size": "—", "url": "" }
+          ]
+        },
+        {
+          "id": "client",
+          "title": "Client 部署包",
+          "hint": "安装在内网机器，提供 KunTunetClient；与 Server 包分开下载。",
+          "files": [
+            { "os": "Linux", "arch": "x86_64 (amd64)", "type": "Client 部署包 (.tar.gz)", "size": "—", "url": "" },
+            { "os": "Linux", "arch": "arm64", "type": "Client 部署包 (.tar.gz)", "size": "—", "url": "" },
+            { "os": "Windows", "arch": "x86_64 (64-bit)", "type": "Client 部署包 (.zip)", "size": "—", "url": "" },
+            { "os": "macOS", "arch": "Apple Silicon (arm64)", "type": "Client 部署包 (.tar.gz)", "size": "—", "url": "" },
+            { "os": "macOS", "arch": "Intel (x86_64)", "type": "Client 部署包 (.tar.gz)", "size": "—", "url": "" }
+          ]
+        },
+        {
+          "id": "desktop",
+          "title": "桌面客户端",
+          "hint": "可视化管理隧道、查看状态与日志，适合本机图形界面操作。",
+          "files": [
+            { "os": "Windows", "arch": "x86_64 (64-bit)", "type": "安装包 (.exe)", "size": "—", "url": "" },
+            { "os": "Windows", "arch": "x86_64 (64-bit)", "type": "绿色便携版 (.zip)", "size": "—", "url": "" },
+            { "os": "macOS", "arch": "Apple Silicon (arm64)", "type": "磁盘映像 (.dmg)", "size": "—", "url": "" },
+            { "os": "macOS", "arch": "Intel (x86_64)", "type": "磁盘映像 (.dmg)", "size": "—", "url": "" },
+            { "os": "Linux", "arch": "x86_64 (amd64)", "type": "压缩包 (.tar.gz)", "size": "—", "url": "" },
+            { "os": "Linux", "arch": "arm64", "type": "压缩包 (.tar.gz)", "size": "—", "url": "" }
+          ]
+        }
+      ]
+    }
+  ]
+}
