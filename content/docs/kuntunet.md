@@ -66,7 +66,7 @@ KunTunetServer \
 | `-token-file` | 多 Agent Token、过期与撤销（正式环境推荐） |
 | `-tls-cert` / `-tls-key` | 启用 TLS |
 
-![Dashboard](./images/kuntunet/dashboard.png)
+![Dashboard](images/kuntunet/desktop-home.png)
 <!-- TODO: 截图 — 浏览器打开管理面板 :8001，展示在线 Agent / 隧道列表 -->
 
 ## 4. 部署命令行客户端（内网机器）

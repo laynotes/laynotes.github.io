@@ -7,8 +7,11 @@ import {
 } from 'lucide-react';
 import MarkdownDoc, { getDocToc } from './MarkdownDoc.jsx';
 import tunetPreview from '../content/docs/images/kuntunet/index.png';
+import tunetPreviewDark from '../content/docs/images/kuntunet/index_dark.png';
 import terminalPreview from '../content/docs/images/kunterminal/index.png';
+import terminalPreviewDark from '../content/docs/images/kunterminal/index_dark.png';
 import sqlPreview from '../content/docs/images/kunsql/index.png';
+import sqlPreviewDark from '../content/docs/images/kunsql/index_dark.png';
 
 const PRODUCTS = {
   tunet: {
@@ -21,6 +24,7 @@ const PRODUCTS = {
     accentBorder: '#fed7aa',
     accentBorderDark: '#9a3412',
     preview: tunetPreview,
+    previewDark: tunetPreviewDark,
     icon: Network,
     tags: ['TCP 穿透', 'TLS 加密', 'Token 认证', '桌面客户端'],
     features: [
@@ -53,6 +57,7 @@ const PRODUCTS = {
     accentBorder: '#bbf7d0',
     accentBorderDark: '#166534',
     preview: terminalPreview,
+    previewDark: terminalPreviewDark,
     icon: TerminalSquare,
     tags: ['AI Copilot', 'Skills 插件', '多模态', 'SSH / SFTP'],
     features: [
@@ -83,6 +88,7 @@ const PRODUCTS = {
     accentBorder: '#bae6fd',
     accentBorderDark: '#075985',
     preview: sqlPreview,
+    previewDark: sqlPreviewDark,
     icon: Database,
     tags: ['AI Copilot', 'Skills / 知识库', '多引擎', '执行计划'],
     features: [
@@ -332,7 +338,7 @@ function HomePage({ navigate, isDark }) {
                   {productList.map((p, i) => (
                     <img
                       key={p.id}
-                      src={p.preview}
+                      src={isDark ? p.previewDark : p.preview}
                       alt={`${p.name} 界面`}
                       className={`absolute inset-0 w-full h-full object-cover object-top transition-opacity duration-[900ms] ease-in-out ${
                         i === activeIdx ? 'opacity-100' : 'opacity-0'
@@ -536,7 +542,11 @@ function ProductPage({ product, navigate, isDark }) {
           {product.preview && (
             <div className="mt-12 w-full max-w-4xl mx-auto rounded-2xl overflow-hidden border shadow-xl"
                  style={{ borderColor: isDark ? product.accentBorderDark : product.accentBorder }}>
-              <img src={product.preview} alt={`${product.name} 界面预览`} className="w-full h-auto object-cover object-top" />
+              <img
+                src={isDark ? product.previewDark : product.preview}
+                alt={`${product.name} 界面预览`}
+                className="w-full h-auto object-cover object-top"
+              />
             </div>
           )}
         </div>
