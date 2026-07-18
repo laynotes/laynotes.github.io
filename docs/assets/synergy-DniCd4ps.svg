@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">套件联动示意</title>
+  <desc id="desc">KunTunet 打通内网后，搭配 KunTerminal / KunSQL 完成 SSH 排障与数据库访问。</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M1 1l7 4-7 4V1z" fill="#94a3b8"/>
+    </marker>
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="420" rx="16" fill="#f8fafc"/>
+
+  <text x="480" y="42" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="20" font-weight="700" fill="#0f172a">套件联动示意</text>
+  <text x="480" y="66" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">KunTunet 打通网络后，用 KunTerminal / KunSQL 远程操作</text>
+
+  <g filter="url(#shadow)">
+    <rect x="56" y="110" width="220" height="220" rx="18" fill="#ffffff" stroke="#fed7aa"/>
+  </g>
+  <rect x="76" y="130" width="48" height="48" rx="12" fill="#fff7ed"/>
+  <circle cx="100" cy="154" r="10" fill="none" stroke="#f97316" stroke-width="3"/>
+  <path d="M92 154h16M100 146v16" stroke="#f97316" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="136" y="150" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="18" font-weight="700" fill="#9a3412">KunTunet</text>
+  <text x="136" y="170" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="12" fill="#c2410c">内网穿透</text>
+  <text x="76" y="214" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">公网 Server + 内网 Client</text>
+  <text x="76" y="238" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">映射 SSH / 数据库 / Web</text>
+  <text x="76" y="278" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="12" font-weight="600" fill="#ea580c">1. 先打通网络通道</text>
+
+  <circle cx="330" cy="220" r="18" fill="#e2e8f0"/>
+  <text x="330" y="226" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="20" font-weight="700" fill="#64748b">+</text>
+
+  <path d="M348 200H390" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M348 240H390" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="400" y="96" width="480" height="110" rx="16" fill="#ffffff" stroke="#bbf7d0"/>
+  </g>
+  <rect x="420" y="116" width="40" height="40" rx="10" fill="#f0fdf4"/>
+  <rect x="430" y="126" width="20" height="14" rx="2" fill="none" stroke="#22c55e" stroke-width="2"/>
+  <path d="M434 144h12" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+  <text x="474" y="134" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="17" font-weight="700" fill="#166534">KunTerminal</text>
+  <text x="474" y="154" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="12" fill="#15803d">SSH / SFTP · AI Copilot</text>
+  <text x="420" y="182" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">穿透后连接跳板地址，结合会话用 AI Copilot 排障</text>
+
+  <g filter="url(#shadow)">
+    <rect x="400" y="230" width="480" height="110" rx="16" fill="#ffffff" stroke="#bae6fd"/>
+  </g>
+  <rect x="420" y="250" width="40" height="40" rx="10" fill="#f0f9ff"/>
+  <ellipse cx="440" cy="262" rx="10" ry="5" fill="none" stroke="#0ea5e9" stroke-width="2"/>
+  <path d="M430 262v10c0 3 4.5 5 10 5s10-2 10-5v-10" fill="none" stroke="#0ea5e9" stroke-width="2"/>
+  <path d="M430 267c0 3 4.5 5 10 5s10-2 10-5" fill="none" stroke="#0ea5e9" stroke-width="2"/>
+  <text x="474" y="268" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="17" font-weight="700" fill="#075985">KunSQL</text>
+  <text x="474" y="288" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="12" fill="#0369a1">多引擎数据库 · AI Copilot</text>
+  <text x="420" y="316" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="13" fill="#64748b">映射库端口后连库，AI Copilot 辅助写 SQL / 读执行计划</text>
+
+  <rect x="56" y="356" width="848" height="40" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-dasharray="5 4"/>
+  <text x="480" y="381" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, sans-serif" font-size="13" fill="#475569">2. 再选用终端或数据库客户端完成远程运维</text>
+</svg>

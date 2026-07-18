@@ -15,8 +15,7 @@ Kun Suite 当前包含三款独立工具，可单独使用，也可组合：
 | **KunTerminal** | AI Copilot 加持的跨平台 SSH / SFTP 终端，支持 Skills 与多模态排障 |
 | **KunSQL** | AI Copilot 驱动的多引擎数据库客户端，写 SQL、读执行计划、Skills / 知识库 |
 
-![产品矩阵卡片](./images/overview/product-cards.png)
-<!-- TODO: 截图 — 首页「核心产品矩阵」三张卡片（含 AI Copilot 角标） -->
+![产品矩阵卡片](./images/overview/product-cards.svg)
 
 ## 典型组合场景
 
@@ -24,8 +23,7 @@ Kun Suite 当前包含三款独立工具，可单独使用，也可组合：
 2. **映射数据库**：KunTunet 映射 `5432` / `3306` 等 → 用 KunSQL 填写跳板主机与端口连库 → AI Copilot 写 SQL / 读计划。
 3. **映射 Web / 其他 TCP**：KunTunet 映射对应端口后，浏览器或业务系统直接访问公网地址。
 
-![套件联动示意](./images/overview/synergy.png)
-<!-- TODO: 截图 — 首页「套件联动」区域 -->
+![套件联动示意](./images/overview/synergy.svg)
 
 ## 获取软件
 

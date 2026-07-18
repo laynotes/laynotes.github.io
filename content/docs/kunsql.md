@@ -12,7 +12,7 @@ KunSQL 右侧 AI Copilot 面向查库场景：生成与改写 SQL、解释查询
 2. 选择「OpenAI 兼容 API」或「本地 AI CLI」，配置模型列表与密钥 / 本地命令。
 3. 按需启用「Skills 插件」「知识库」，把常用规范、表说明、排查手册沉淀进去。
 
-![AI 助手设置](./images/kunsql/settings-ai.png)
+![AI 助手设置](images/kunsql/settings-ai-2.png)
 <!-- TODO: 截图 — 设置 → AI 助手（API / 本地 CLI、Skills、知识库入口） -->
 
 ### 1.2 使用 Copilot
